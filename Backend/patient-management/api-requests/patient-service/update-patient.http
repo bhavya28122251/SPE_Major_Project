@@ -1,0 +1,11 @@
+### Unpdate a patient info
+PUT http://localhost:4000/patients/123e4567-e89b-12d3-a456-426614174000
+Content-Type:application/json
+
+{
+  "name": "Jolli Shah",
+  "email": "jolly_shah@xmail.com",
+  "address": "143 main street",
+  "dateOfBirth": "1999-09-12"
+}
+
