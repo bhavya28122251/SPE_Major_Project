@@ -1,0 +1,13 @@
+//localhost:9001/ -> address of the server
+//BillingService -> name of the servce(see in proto file)
+//CreateBillingAccount -> Name of the RPC method (see in proto file)
+
+GRPC localhost:9001/BillingService/CreateBillingAccount
+
+//BillingRequest object
+{
+  "patientId": "12345",
+   "name" : "John Doe",
+  "email" : "john@gmail.com"
+}
+
