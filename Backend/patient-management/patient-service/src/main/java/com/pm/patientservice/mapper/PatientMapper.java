@@ -5,28 +5,54 @@ package com.pm.patientservice.mapper;
 import com.pm.patientservice.dto.PatientRequestDTO;
 import com.pm.patientservice.dto.PatientResponseDTO;
 import com.pm.patientservice.model.Patient;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+@Component
 public class PatientMapper {
-    public static PatientResponseDTO toDTO(Patient patient) {
-        PatientResponseDTO patientDTO = new PatientResponseDTO();
-        patientDTO.setId(patient.getId().toString());
-        patientDTO.setName(patient.getName());
-        patientDTO.setEmail(patient.getEmail());
-        patientDTO.setAddress(patient.getAddress());
-        patientDTO.setDateOfBirth(patient.getDateOfBirth().toString());
 
-        return patientDTO;
+    // Convert Patient entity to PatientResponseDTO (used for response)
+    public PatientResponseDTO toDTO(Patient patient) {
+        // Checking if the patient object is not null to avoid NullPointerException
+        if (patient == null) {
+            return null;
+        }
+
+        PatientResponseDTO patientResponseDTO = new PatientResponseDTO(
+                patient.getId().toString(), // Converting UUID to String
+                patient.getName(),
+                patient.getEmail(),
+                patient.getAddress(),
+                patient.getPhone(),
+                patient.getGender(),
+                patient.getAge(),
+                patient.getDateOfBirth(),
+                patient.getRegisteredDate()
+        );
+
+        return patientResponseDTO;
     }
 
-    public static Patient toModel(PatientRequestDTO patientRequestDTO) {
-        Patient patient = new Patient();
-        patient.setName(patientRequestDTO.getName());
-        patient.setEmail(patientRequestDTO.getEmail());
-        patient.setAddress(patientRequestDTO.getAddress());
-        patient.setDateOfBirth(LocalDate.parse(patientRequestDTO.getDateOfBirth()));
-        patient.setRegisteredDate(LocalDate.parse(patientRequestDTO.getRegisteredDate()));
+    // Convert PatientRequestDTO (used for request) to Patient entity
+    public Patient toModel(PatientRequestDTO patientRequestDTO) {
+        // Checking if the PatientRequestDTO is not null to avoid NullPointerException
+        if (patientRequestDTO == null) {
+            return null;
+        }
+
+        Patient patient = new Patient(
+                UUID.randomUUID(),  // Assigning a new UUID if it's a new patient
+                patientRequestDTO.getName(),
+                patientRequestDTO.getEmail(),
+                patientRequestDTO.getAddress(),
+                patientRequestDTO.getPhone(),
+                patientRequestDTO.getGender(),
+                patientRequestDTO.getAge(),
+                patientRequestDTO.getDateOfBirth(),
+                patientRequestDTO.getRegisteredDate()
+        );
 
         return patient;
     }
