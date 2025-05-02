@@ -36,24 +36,17 @@ public class PatientMapper {
     }
 
     // Convert PatientRequestDTO (used for request) to Patient entity
-    public Patient toModel(PatientRequestDTO patientRequestDTO) {
-        // Checking if the PatientRequestDTO is not null to avoid NullPointerException
-        if (patientRequestDTO == null) {
-            return null;
-        }
-
-        Patient patient = new Patient(
-                UUID.randomUUID(),  // Assigning a new UUID if it's a new patient
-                patientRequestDTO.getName(),
-                patientRequestDTO.getEmail(),
-                patientRequestDTO.getAddress(),
-                patientRequestDTO.getPhone(),
-                patientRequestDTO.getGender(),
-                patientRequestDTO.getAge(),
-                patientRequestDTO.getDateOfBirth(),
-                patientRequestDTO.getRegisteredDate()
-        );
-
-        return patient;
+    public Patient toModel(PatientRequestDTO dto) {
+        return Patient.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .address(dto.getAddress())
+                .phone(dto.getPhone())
+                .gender(dto.getGender())
+                .age(dto.getAge())
+                .dateOfBirth(dto.getDateOfBirth())
+                .registeredDate(dto.getRegisteredDate())
+                // DO NOT set id or version here
+                .build();
     }
 }
