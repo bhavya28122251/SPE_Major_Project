@@ -6,7 +6,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=hospital_user
       - MYSQL_PASSWORD=hospital_user
-      - MYSQL_DATABASE=hospitaldb
+      - MYSQL_DATABASE=hospitaldb #database
     ports:
       - 3307:3306
     volumes:
