@@ -1,0 +1,32 @@
+
+services:
+  mysqldb:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=hospital_user
+      - MYSQL_PASSWORD=hospital_user
+      - MYSQL_DATABASE=hospitaldb
+    ports:
+      - 3307:3306
+    volumes:
+      - db:/var/lib/mysql
+
+  patient-service:
+    build: ./patient-service
+    restart: always
+    image: patient-service-container
+    ports:
+      - 4000:4000
+    depends_on:
+      - mysqldb
+    environment:
+      - MYSQL_HOST=mysqldb
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=hospital_user
+      - MYSQL_PASSWORD=hospital_user
+      - MYSQL_DATABASE=hospitaldb
+
+volumes:
+  db:

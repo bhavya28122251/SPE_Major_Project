@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS patient
     address         VARCHAR(255)        NOT NULL,
     date_of_birth   DATE                NOT NULL,
     registered_date DATE                NOT NULL
-    );
+);
 
 -- Insert well-known UUIDs for specific patients
 INSERT INTO patient (id, name, email, address, date_of_birth, registered_date)
