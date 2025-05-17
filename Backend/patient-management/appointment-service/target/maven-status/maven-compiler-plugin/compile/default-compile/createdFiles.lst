@@ -1,0 +1,12 @@
+com\healthcare\appointment\client\DoctorServiceClient.class
+com\healthcare\appointment\client\PatientServiceClient.class
+com\healthcare\appointment\dto\AppointmentRequest.class
+com\healthcare\appointment\repository\AppointmentRepository.class
+com\healthcare\appointment\AppointmentServiceApplication.class
+com\healthcare\appointment\controller\AppointmentController.class
+com\healthcare\appointment\util\AvailabilityUtil.class
+com\healthcare\appointment\entity\AppointmentStatus.class
+com\healthcare\appointment\util\AvailabilityUtil$1.class
+com\healthcare\appointment\dto\AppointmentResponse.class
+com\healthcare\appointment\service\AppointmentService.class
+com\healthcare\appointment\entity\Appointment.class

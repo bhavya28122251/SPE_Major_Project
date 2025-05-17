@@ -1,0 +1,11 @@
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\AppointmentServiceApplication.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\client\PatientServiceClient.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\controller\AppointmentController.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\dto\AppointmentResponse.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\dto\AppointmentRequest.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\entity\AppointmentStatus.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\repository\AppointmentRepository.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\util\AvailabilityUtil.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\client\DoctorServiceClient.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\entity\Appointment.java
+D:\IIITB second sem\CursorProject2\appointment-service\src\main\java\com\healthcare\appointment\service\AppointmentService.java
