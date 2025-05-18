@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_USER = "bhavya28122251"
-        DOCKER_CREDENTIALS_ID = "dockerhub-credentials"
+        DOCKER_CREDENTIALS_ID = "	DockerHubCred"
     }
 
     triggers {
