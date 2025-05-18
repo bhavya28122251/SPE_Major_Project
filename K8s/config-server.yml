@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-server-config
+data:
+  EUREKA_SERVER_ADDRESS: "http://eureka-0.eureka.default.svc.cluster.local:8761/eureka/"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server-app
+  labels:
+    app: config-server-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server-app
+  template:
+    metadata:
+      labels:
+        app: config-server-app
+    spec:
+      containers:
+        - name: config-server-app
+          image: bhavya28122251/config-server
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8888
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: config-server-config
+                  key: EUREKA_SERVER_ADDRESS
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server-svc
+spec:
+  selector:
+    app: config-server-app
+  ports:
+    - port: 80
+      targetPort: 8888

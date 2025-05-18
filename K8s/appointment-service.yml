@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appointment-service-config
+data:
+  EUREKA_SERVER_ADDRESS: "http://eureka-0.eureka.default.svc.cluster.local:8761/eureka/"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-service-app
+  labels:
+    app: appointment-service-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appointment-service-app
+  template:
+    metadata:
+      labels:
+        app: appointment-service-app
+    spec:
+      containers:
+        - name: appointment-service-app
+          image: bhavya28122251/appointment-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8084
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: appointment-service-config
+                  key: EUREKA_SERVER_ADDRESS
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointment-service-svc
+spec:
+  selector:
+    app: appointment-service-app
+  ports:
+    - port: 80
+      targetPort: 8084
