@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project.git'
+                git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project/Backend.patient-management.git'
             }
         }
 
