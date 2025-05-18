@@ -4,6 +4,7 @@ metadata:
   name: patient-service-config
 data:
   EUREKA_SERVER_ADDRESS: "http://eureka-0.eureka.default.svc.cluster.local:8761/eureka/"
+  SPRING_CLOUD_CONFIG_URI: "http://config-server-svc.default.svc.cluster.local"
 
 ---
 apiVersion: apps/v1
@@ -29,6 +30,11 @@ spec:
           ports:
             - containerPort: 8082
           env:
+            - name: SPRING_CLOUD_CONFIG_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: patient-service-config
+                  key: SPRING_CLOUD_CONFIG_URI
             - name: HOSTNAME
               valueFrom:
                 fieldRef:
@@ -38,6 +44,8 @@ spec:
                 configMapKeyRef:
                   name: patient-service-config
                   key: EUREKA_SERVER_ADDRESS
+           
+            
 
 ---
 apiVersion: v1
