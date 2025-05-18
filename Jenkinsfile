@@ -13,14 +13,15 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project/Backend.patient-management.git'
+                git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project.git'
             }
         }
 
         stage('Build with Maven and Run Tests') {
             steps {
-                // Clean, compile, run tests, package - fails if tests fail
+                dir('Backend/patient-management') {
                 sh 'mvn clean package'
+                }
             }
         }
 
