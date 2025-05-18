@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_USER = "bhavya28122251"
-        DOCKER_CREDENTIALS_ID = "	DockerHubCred"
+        DOCKER_CREDENTIALS_ID = "DockerHubCred" 
     }
 
     triggers {
@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-               git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project.git'
+                git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project.git' 
             }
         }
 
@@ -26,11 +26,21 @@ pipeline {
                         usernameVariable: 'USER',
                         passwordVariable: 'PASS'
                     )]) {
-                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh 'echo "$PASS" | docker login -u "$USER" --password-stdin'
+
                         for (service in services) {
                             def image = "${DOCKER_USER}/${service}:latest"
+                            def dockerfile = "Backend/patient-management/${service}/Dockerfile"
+                            def context = "Backend/patient-management/${service}"
+
+                            echo "Building and pushing ${image}"
+
                             sh """
-                                docker build -t ${image} ./Backend/patient-management/${service}
+                                docker build -t ${image} \
+    -f Backend/patient-management/${service}/Dockerfile \
+    Backend/patient-management/
+  docker push ${image}
+
                                 docker push ${image}
                             """
                         }
@@ -42,10 +52,14 @@ pipeline {
 
     post {
         success {
-            echo 'Images built and pushed successfully.'
+            echo '✅ All images built and pushed successfully.'
         }
         failure {
-            echo 'Build or push failed.'
+            echo '❌ Build or push failed.'
         }
     }
 }
+
+
+
+
