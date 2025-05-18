@@ -1,14 +1,16 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+    
     environment {
         DOCKER_USER = "bhavya28122251"
         DOCKER_CREDENTIALS_ID = "DockerHubCred"
     }
 
-    triggers {
-        githubPush()
-    }
+    
     //Tesing122333867868_final457376t57854
     stages {
         stage('Clone Repo') {
