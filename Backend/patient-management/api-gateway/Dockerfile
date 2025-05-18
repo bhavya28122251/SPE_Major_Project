@@ -4,7 +4,7 @@ FROM eclipse-temurin:21-jdk-alpine AS runner
 WORKDIR /app
 
 # Copy the pre-built JAR from the Jenkins workspace into the image
-COPY target/api-gateway-0.0.1-SNAPSHOT.jar ./app.jar
+COPY target/api-gateway-1.0-SNAPSHOT.jar ./app.jar
 
 # Expose port your app listens on
 EXPOSE 8085
