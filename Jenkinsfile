@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/bhavya28122251/SPE_Major_Project.git'
+               git branch: 'main', url: 'https://github.com/bhavya28122251/SPE_Major_Project.git'
             }
         }
 
@@ -26,7 +26,7 @@ pipeline {
                         usernameVariable: 'USER',
                         passwordVariable: 'PASS'
                     )]) {
-                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
                         for (service in services) {
                             def image = "${DOCKER_USER}/${service}:latest"
                             sh """
