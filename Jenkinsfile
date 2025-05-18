@@ -30,7 +30,7 @@ pipeline {
                         for (service in services) {
                             def image = "${DOCKER_USER}/${service}:latest"
                             sh """
-                                docker build -t ${image} ./${service}
+                                docker build -t ${image} ./Backend/patient-management/${service}
                                 docker push ${image}
                             """
                         }
