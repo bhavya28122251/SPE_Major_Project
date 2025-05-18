@@ -9,7 +9,7 @@ pipeline {
     triggers {
         githubPush()
     }
-    //Tesing
+    //Tesing1
     stages {
         stage('Clone Repo') {
             steps {
