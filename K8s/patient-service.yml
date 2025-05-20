@@ -33,6 +33,12 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: EUREKA_SERVER_ADDRESS
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_PROFILES_ACTIVE
+            
 
             # - name: SPRING_DATASOURCE_URL
             #   valueFrom:
