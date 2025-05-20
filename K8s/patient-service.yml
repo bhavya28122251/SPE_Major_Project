@@ -1,5 +1,5 @@
 
-apiVersion: apps/v1
+apiVersion: v1
 kind: Deployment
 metadata:
   name: patient-service-app
@@ -33,6 +33,7 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: EUREKA_SERVER_ADDRESS
+
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
