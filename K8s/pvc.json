@@ -1,0 +1,42 @@
+{
+    "apiVersion": "v1",
+    "kind": "PersistentVolumeClaim",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"PersistentVolumeClaim\",\"metadata\":{\"annotations\":{},\"name\":\"mysql-pvc\",\"namespace\":\"default\"},\"spec\":{\"accessModes\":[\"ReadWriteOnce\"],\"resources\":{\"requests\":{\"storage\":\"1Gi\"}}}}\n",
+            "pv.kubernetes.io/bind-completed": "yes",
+            "pv.kubernetes.io/bound-by-controller": "yes",
+            "volume.beta.kubernetes.io/storage-provisioner": "k8s.io/minikube-hostpath",
+            "volume.kubernetes.io/storage-provisioner": "k8s.io/minikube-hostpath"
+        },
+        "creationTimestamp": "2025-05-15T19:27:38Z",
+        "deletionGracePeriodSeconds": 0,
+        "deletionTimestamp": "2025-05-21T16:47:27Z",
+        "name": "mysql-pvc",
+        "namespace": "default",
+        "resourceVersion": "118197",
+        "uid": "97cff761-fe82-4531-a129-34919c497a42"
+    },
+    "spec": {
+        "accessModes": [
+            "ReadWriteOnce"
+        ],
+        "resources": {
+            "requests": {
+                "storage": "1Gi"
+            }
+        },
+        "storageClassName": "standard",
+        "volumeMode": "Filesystem",
+        "volumeName": "pvc-97cff761-fe82-4531-a129-34919c497a42"
+    },
+    "status": {
+        "accessModes": [
+            "ReadWriteOnce"
+        ],
+        "capacity": {
+            "storage": "1Gi"
+        },
+        "phase": "Bound"
+    }
+}
