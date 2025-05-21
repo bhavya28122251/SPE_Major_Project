@@ -1,43 +1,72 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-server-config
-data:
-  EUREKA_SERVER_ADDRESS: "http://eureka-0.eureka.default.svc.cluster.local:8761/eureka/"
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: config-server-app
+  name: config-server
   labels:
-    app: config-server-app
+    app: config-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: config-server-app
+      app: config-server
   template:
     metadata:
       labels:
-        app: config-server-app
+        app: config-server
     spec:
       containers:
-        - name: config-server-app
+        - name: config-server
           image: bhavya28122251/config-server
           imagePullPolicy: Always
           ports:
             - containerPort: 8888
           env:
-            - name: HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
-                  name: config-server-config
+                  name: common-config
                   key: EUREKA_SERVER_ADDRESS
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_JPA_HIBERNATE_DDL_AUTO
+            - name: SPRING_JPA_SHOW_SQL
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_JPA_SHOW_SQL
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: SPRING_JPA_DATABASE_PLATFORM
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: common-secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: common-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+
 
 ---
 apiVersion: v1
