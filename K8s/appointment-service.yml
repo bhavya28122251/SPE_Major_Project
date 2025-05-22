@@ -30,12 +30,6 @@ spec:
           ports:
             - containerPort: 8084
           env:
-            - name: SPRING_CLOUD_CONFIG_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: common-config
-                  key: SPRING_CLOUD_CONFIG_URI
-
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
@@ -81,15 +75,13 @@ spec:
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: common-secret
-                  key: SPRING_DATASOURCE_USERNAME
-
+                  name: mysql-secret
+                  key: username
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: common-secret
-                  key: SPRING_DATASOURCE_PASSWORD
-           
+                  name: mysql-secret
+                  key: password
             
 ---
 apiVersion: v1

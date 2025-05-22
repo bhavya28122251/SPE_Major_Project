@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,24 +21,11 @@ spec:
           ports:
             - containerPort: 8082
           env:
-            # - name: SPRING_CLOUD_CONFIG_URI
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: common-config
-            #       key: SPRING_CLOUD_CONFIG_URIvkgj
-
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
                   name: common-config
                   key: EUREKA_SERVER_ADDRESS
-
-            # - name: SPRING_PROFILES_ACTIVE
-            #   valueFrom:
-            #     configMapKeyRef:
-            #       name: common-config
-            #       key: SPRING_PROFILES_ACTIVE
-            
 
             - name: SPRING_DATASOURCE_URL
               valueFrom:
@@ -81,22 +67,15 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mysql-secret
-                  key: SPRING_DATASOURCE_USERNAME
-
+                  key: username
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mysql-secret
-                  key: SPRING_DATASOURCE_PASSWORD
-            - name: SPRING_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-secret
-                  key: SPRING_ROOT_PASSWORD
-           
-            
+                  key: password
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -105,5 +84,5 @@ spec:
   selector:
     app: patient-service-app
   ports:
-    - port: 80
+    - port: 8082
       targetPort: 8082
