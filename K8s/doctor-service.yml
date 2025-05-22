@@ -85,5 +85,5 @@ spec:
   selector:
     app: doctor-service-app
   ports:
-    - port: 80
+    - port: 8083
       targetPort: 8083
