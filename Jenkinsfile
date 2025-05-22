@@ -33,6 +33,14 @@ pipeline {
             }
         }
 
+        stage('Build Frontend') {
+            steps {
+                dir('Frontend') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
 
         stage('Build and Push Images') {
             steps {
@@ -46,6 +54,7 @@ pipeline {
                     )]) {
                         sh 'echo "$PASS" | docker login -u "$USER" --password-stdin'
 
+                        // Build and push backend services
                         for (service in services) {
                             def image = "${DOCKER_USER}/${service}:latest"
                             def dockerfile = "Backend/patient-management/${service}/Dockerfile"
@@ -53,12 +62,19 @@ pipeline {
 
                             echo "Building and pushing ${image}"
 
-                            // Build the Docker image using the specific service folder as context
                             sh """
                                 docker build -t ${image} -f ${dockerfile} ${context}
                                 docker push ${image}
                             """
                         }
+
+                        // Build and push frontend
+                        def frontendImage = "${DOCKER_USER}/frontend:latest"
+                        echo "Building and pushing frontend image"
+                        sh """
+                            docker build -t ${frontendImage} -f Frontend/Dockerfile Frontend/
+                            docker push ${frontendImage}
+                        """
                     }
                 }
             }
