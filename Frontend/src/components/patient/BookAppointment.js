@@ -1,0 +1,228 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Container,
+  Paper,
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Alert,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+
+function BookAppointment() {
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    date: null,
+    time: null,
+    reason: '',
+    symptoms: '',
+  });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const { token, user } = useSelector((state) => state.auth);
+
+  const fetchDoctors = useCallback(async () => {
+    try {
+      const response = await axios.get('http://localhost:8083/api/doctors', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDoctors(response.data);
+    } catch (error) {
+      setError('Failed to fetch doctors');
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetchDoctors();
+  }, [fetchDoctors]);
+
+  const handleDoctorSelect = (doctor) => {
+    setSelectedDoctor(doctor);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedDoctor(null);
+    setFormData({
+      date: null,
+      time: null,
+      reason: '',
+      symptoms: '',
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const appointmentData = {
+        patientId: user.id,
+        doctorId: selectedDoctor.id,
+        date: formData.date,
+        time: formData.time,
+        reason: formData.reason,
+        symptoms: formData.symptoms,
+        status: 'PENDING',
+      };
+
+      await axios.post('http://localhost:8084/api/appointments', appointmentData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setSuccess('Appointment booked successfully');
+      handleClose();
+    } catch (error) {
+      setError('Failed to book appointment');
+    }
+  };
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Paper sx={{ p: 2 }}>
+        <Typography variant="h6" component="h2" gutterBottom>
+          Book an Appointment
+        </Typography>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
+
+        <Grid container spacing={3}>
+          {doctors.map((doctor) => (
+            <Grid item xs={12} sm={6} md={4} key={doctor.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Dr. {doctor.name}
+                  </Typography>
+                  <Typography color="textSecondary" gutterBottom>
+                    {doctor.qualification}
+                  </Typography>
+                  <Typography variant="body2" gutterBottom>
+                    Experience: {doctor.experience} years
+                  </Typography>
+                  <Box sx={{ mt: 1 }}>
+                    {doctor.specialties.map((specialty, index) => (
+                      <Chip
+                        key={index}
+                        label={specialty}
+                        size="small"
+                        sx={{ mr: 0.5, mb: 0.5 }}
+                      />
+                    ))}
+                  </Box>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => handleDoctorSelect(doctor)}
+                  >
+                    Book Appointment
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+          <DialogTitle>
+            Book Appointment with Dr. {selectedDoctor?.name}
+          </DialogTitle>
+          <DialogContent>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <DatePicker
+                      label="Date"
+                      value={formData.date}
+                      onChange={(newValue) => {
+                        setFormData({ ...formData, date: newValue });
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} fullWidth margin="normal" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TimePicker
+                      label="Time"
+                      value={formData.time}
+                      onChange={(newValue) => {
+                        setFormData({ ...formData, time: newValue });
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} fullWidth margin="normal" />
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </LocalizationProvider>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Reason for Visit"
+                name="reason"
+                multiline
+                rows={2}
+                value={formData.reason}
+                onChange={(e) =>
+                  setFormData({ ...formData, reason: e.target.value })
+                }
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Symptoms"
+                name="symptoms"
+                multiline
+                rows={3}
+                value={formData.symptoms}
+                onChange={(e) =>
+                  setFormData({ ...formData, symptoms: e.target.value })
+                }
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSubmit} variant="contained" color="primary">
+              Book Appointment
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Paper>
+    </Container>
+  );
+}
+
+export default BookAppointment; 
