@@ -1,3 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jwt-config
+data:
+  jwt.secret: u8B+zK3sD9qZ47tR4xtmu3DyQzFX7FHTYfaU2ZKIV6U=
+  jwt.expiration: "86400000"
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -73,7 +83,16 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
-
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: jwt-config
+                  key: jwt.secret
+            - name: JWT_EXPIRATION  
+              valueFrom:
+                configMapKeyRef:
+                  name: jwt-config
+                  key: jwt.expiration
 ---
 apiVersion: v1
 kind: Service

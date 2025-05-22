@@ -37,7 +37,7 @@ pipeline {
         stage('Build and Push Images') {
             steps {
                 script {
-                    def services = ['service-registry','config-server','auth-service', 'api-gateway', 'doctor-service', 'patient-service']
+                    def services = ['service-registry','config-server','auth-service', 'api-gateway', 'doctor-service', 'patient-service','appointment-service']
 
                     withCredentials([usernamePassword(
                         credentialsId: DOCKER_CREDENTIALS_ID,
