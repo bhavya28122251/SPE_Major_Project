@@ -26,7 +26,7 @@ spec:
             #   valueFrom:
             #     configMapKeyRef:
             #       name: common-config
-            #       key: SPRING_CLOUD_CONFIG_URI
+            #       key: SPRING_CLOUD_CONFIG_URIvkgj
 
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
