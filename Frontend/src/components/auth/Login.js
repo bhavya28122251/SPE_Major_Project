@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import { handleApiError } from '../../utils/errorHandler';
-import axios from 'axios';
+import api, { API_ENDPOINTS } from '../../utils/apiConfig';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -62,12 +62,7 @@ function Login() {
     dispatch(loginStart());
 
     try {
-      const response = await axios.post('http://localhost:8081/api/auth/login', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true
-      });
+      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, formData);
       
       if (response.data && response.data.token) {
         dispatch(loginSuccess({
@@ -87,9 +82,7 @@ function Login() {
           email: response.data.email,
           fullName: response.data.fullName,
           role: response.data.role,
-        }));        
-        // Set default Authorization header for future requests
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        }));
         
         // Redirect based on user role
         switch (response.data.role) {

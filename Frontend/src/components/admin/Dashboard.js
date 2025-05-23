@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Grid, Paper, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api, { API_ENDPOINTS } from '../../utils/apiConfig';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -14,22 +14,16 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Fetch token from local storage
+    const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login'); // Redirect to login if no token
+      navigate('/login');
     } else {
       const fetchStats = async () => {
         try {
           const [patientsRes, doctorsRes, appointmentsRes] = await Promise.all([
-            axios.get('http://localhost:8082/api/patients/count', {
-              headers: { Authorization: `Bearer ${token}` }
-            }),
-            axios.get('http://localhost:8083/api/doctors/count', {
-              headers: { Authorization: `Bearer ${token}` }
-            }),
-            axios.get('http://localhost:8084/api/appointments/stats', {
-              headers: { Authorization: `Bearer ${token}` }
-            })
+            api.get(API_ENDPOINTS.PATIENT.COUNT),
+            api.get(API_ENDPOINTS.DOCTOR.COUNT),
+            api.get(API_ENDPOINTS.APPOINTMENT.STATS)
           ]);
 
           setStats({
@@ -48,8 +42,8 @@ const AdminDashboard = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token on logout
-    navigate('/login'); // Redirect to login
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const StatCard = ({ title, value, color }) => (

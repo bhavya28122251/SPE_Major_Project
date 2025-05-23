@@ -14,15 +14,16 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import axios from 'axios';
+import api, { API_ENDPOINTS } from '../../utils/apiConfig';
 
 function Register() {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'PATIENT',
+    role: 0, // 0 for PATIENT, 1 for DOCTOR
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -47,11 +48,12 @@ function Register() {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:8081/api/auth/register', {
-        name: formData.name,
+      await api.post(API_ENDPOINTS.AUTH.REGISTER, {
+        username: formData.username,
+        fullName: formData.fullName,
         email: formData.email,
         password: formData.password,
-        role: formData.role,
+        role: parseInt(formData.role),
       });
       navigate('/login');
     } catch (error) {
@@ -96,12 +98,23 @@ function Register() {
               margin="normal"
               required
               fullWidth
-              id="name"
-              label="Full Name"
-              name="name"
-              autoComplete="name"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
-              value={formData.name}
+              value={formData.username}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="fullName"
+              label="Full Name"
+              name="fullName"
+              autoComplete="name"
+              value={formData.fullName}
               onChange={handleChange}
             />
             <TextField
@@ -148,8 +161,8 @@ function Register() {
                 label="Role"
                 onChange={handleChange}
               >
-                <MenuItem value="PATIENT">Patient</MenuItem>
-                <MenuItem value="DOCTOR">Doctor</MenuItem>
+                <MenuItem value={3}>Patient</MenuItem>
+                <MenuItem value={2}>Doctor</MenuItem>
               </Select>
             </FormControl>
             <Button
