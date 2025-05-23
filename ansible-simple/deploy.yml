@@ -30,13 +30,6 @@
         src: ../K8s/storage/pv-pvc.yml
         namespace: healthcare-app
 
-    # MySQL Deployment
-    - name: Deploy MySQL ConfigMap
-      kubernetes.core.k8s:
-        state: present
-        src: ../K8s/services/mysql/config.yml
-        namespace: healthcare-app
-
     - name: Deploy MySQL Service and Deployment
       kubernetes.core.k8s:
         state: present
@@ -54,7 +47,7 @@
       with_items:
         - ../K8s/services/service-registry/config.yml
         - ../K8s/services/service-registry/service.yml
-        - ../K8s/services/service-registry/deployment.yml
+        - ../K8s/services/service-registry/statefulset.yml
 
     - name: Deploy Auth Service Components
       kubernetes.core.k8s:
