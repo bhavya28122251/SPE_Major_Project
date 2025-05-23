@@ -17,8 +17,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import axios from 'axios';
@@ -29,8 +28,7 @@ function BookAppointment() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    date: null,
-    time: null,
+    appointmentDateTime: null,
     reason: '',
     symptoms: '',
   });
@@ -62,8 +60,7 @@ function BookAppointment() {
     setOpen(false);
     setSelectedDoctor(null);
     setFormData({
-      date: null,
-      time: null,
+      appointmentDateTime: null,
       reason: '',
       symptoms: '',
     });
@@ -75,8 +72,7 @@ function BookAppointment() {
       const appointmentData = {
         patientId: user.id,
         doctorId: selectedDoctor.id,
-        date: formData.date,
-        time: formData.time,
+        appointmentDateTime: formData.appointmentDateTime,
         reason: formData.reason,
         symptoms: formData.symptoms,
         status: 'PENDING',
@@ -159,28 +155,17 @@ function BookAppointment() {
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <DatePicker
-                      label="Date"
-                      value={formData.date}
+                  <Grid item xs={12}>
+                    <DateTimePicker
+                      label="Appointment Date and Time"
+                      value={formData.appointmentDateTime}
                       onChange={(newValue) => {
-                        setFormData({ ...formData, date: newValue });
+                        setFormData({ ...formData, appointmentDateTime: newValue });
                       }}
                       renderInput={(params) => (
                         <TextField {...params} fullWidth margin="normal" />
                       )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TimePicker
-                      label="Time"
-                      value={formData.time}
-                      onChange={(newValue) => {
-                        setFormData({ ...formData, time: newValue });
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} fullWidth margin="normal" />
-                      )}
+                      minDateTime={new Date()}
                     />
                   </Grid>
                 </Grid>

@@ -21,6 +21,8 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-root-password
+            - name: MYSQL_DATABASE
+              value: healthcare_db
           resources:
             requests:
               memory: "2Gi"
@@ -33,8 +35,13 @@ spec:
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
+            - name: mysql-init-script
+              mountPath: /docker-entrypoint-initdb.d
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
             claimName: mysql-pvc-new
+        - name: mysql-init-script
+          configMap:
+            name: mysql-init-script
       restartPolicy: Always
