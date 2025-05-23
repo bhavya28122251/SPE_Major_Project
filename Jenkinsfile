@@ -8,6 +8,7 @@ pipeline {
     environment {
         DOCKER_USER = "bhavya28122251"
         DOCKER_CREDENTIALS_ID = "DockerHubCred"
+        KUBECONFIG = credentials('kubeconfig')
     }
 
     
@@ -22,7 +23,7 @@ pipeline {
         stage('Build with Maven and Run Tests') {
             steps {
                 dir('Backend/patient-management') {
-                sh 'mvn clean package'
+                    sh 'mvn clean package'
                 }
             }
         }
@@ -45,7 +46,14 @@ pipeline {
         stage('Build and Push Images') {
             steps {
                 script {
-                    def services = ['service-registry','config-server','auth-service', 'api-gateway', 'doctor-service', 'patient-service','appointment-service']
+                    def services = [
+                        'service-registry',
+                        'auth-service',
+                        'api-gateway',
+                        'doctor-service',
+                        'patient-service',
+                        'appointment-service'
+                    ]
 
                     withCredentials([usernamePassword(
                         credentialsId: DOCKER_CREDENTIALS_ID,
@@ -61,7 +69,6 @@ pipeline {
                             def context = "Backend/patient-management/${service}"
 
                             echo "Building and pushing ${image}"
-
                             sh """
                                 docker build -t ${image} -f ${dockerfile} ${context}
                                 docker push ${image}
@@ -79,9 +86,56 @@ pipeline {
                 }
             }
         }
+
+        stage('Setup Kubernetes') {
+            steps {
+                sh '''
+                    mkdir -p ~/.kube
+                    echo "$KUBECONFIG" > ~/.kube/config
+                    chmod 600 ~/.kube/config
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    python3 -m pip install --user ansible
+                    ansible-galaxy collection install kubernetes.core
+                    pip install openshift
+                '''
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                dir('ansible-simple') {
+                    sh '''
+                        export KUBECONFIG=~/.kube/config
+                        ansible-playbook -i inventory.ini deploy.yml
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    kubectl get pods -n healthcare-app
+                    kubectl get services -n healthcare-app
+                '''
+            }
+        }
     }
 
     post {
+        always {
+            sh '''
+                docker logout
+                rm -f ~/.kube/config
+            '''
+            cleanWs()
+        }
         success {
             echo '✅ All images built, tested, and pushed successfully.'
         }
