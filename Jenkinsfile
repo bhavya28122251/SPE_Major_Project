@@ -83,7 +83,19 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup Docker Images') {
+            steps {
+                script {
+                    echo "Cleaning up unused Docker images..."
+                    // Remove dangling images
+                    sh 'docker image prune -f'
 
+                    // Remove all images without a tag
+                    sh 'docker images | grep "<none>" | awk \'{print $3}\' | xargs -r docker rmi -f'
+                }
+            }
+        }
+        
         stage('Setup Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
