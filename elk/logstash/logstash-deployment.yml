@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: elk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:8.12.1
+        ports:
+        - containerPort: 5044
+          name: beats
+        volumeMounts:
+        - name: logstash-config
+          mountPath: /usr/share/logstash/pipeline/logstash.conf
+          subPath: logstash.conf
+      volumes:
+      - name: logstash-config
+        configMap:
+          name: logstash-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: elk
+spec:
+  selector:
+    app: logstash
+  ports:
+  - port: 5044
+    name: beats
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  namespace: elk
+data:
+  logstash.conf: |
+    input {
+      beats {
+        port => 5044
+      }
+    }
+
+    filter {
+      json {
+        source => "message"
+      }
+      
+      date {
+        match => ["timestamp", "ISO8601"]
+        target => "@timestamp"
+      }
+    }
+
+    output {
+      elasticsearch {
+        hosts => ["elasticsearch:9200"]
+        index => "healthcare-logs-%{+YYYY.MM.dd}"
+      }
+      stdout { codec => rubydebug }
+    } 

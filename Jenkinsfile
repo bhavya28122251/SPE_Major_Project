@@ -97,6 +97,21 @@ pipeline {
             }
         }
 
+        stage('Deploy ELK Stack') {
+            steps {
+                sh '''
+                    chmod +x elk/deploy-elk.sh
+                    ./elk/deploy-elk.sh
+                    
+                    # Wait for ELK stack to be ready
+                    echo "Waiting for ELK stack to be fully ready..."
+                    kubectl wait --namespace=elk --for=condition=ready pod -l app=elasticsearch --timeout=300s
+                    kubectl wait --namespace=elk --for=condition=ready pod -l app=logstash --timeout=300s
+                    kubectl wait --namespace=elk --for=condition=ready pod -l app=kibana --timeout=300s
+                '''
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh '''
@@ -114,6 +129,8 @@ pipeline {
             steps {
                 dir('ansible-simple') {
                     sh '''
+                        export LC_ALL=C.UTF-8
+                        export LANG=C.UTF-8
                         export KUBECONFIG=~/.kube/config
                         ansible-playbook -i inventory.ini deploy.yml
                     '''
@@ -132,13 +149,7 @@ pipeline {
     }
 
     post {
-        always {
-            sh '''
-                docker logout
-                rm -f ~/.kube/config
-            '''
-            cleanWs()
-        }
+        
         success {
             echo '✅ All images built, tested, and pushed successfully.'
         }
