@@ -47,7 +47,7 @@
       with_items:
         - ../K8s/services/service-registry/config.yml
         - ../K8s/services/service-registry/service.yml
-        - ../K8s/services/service-registry/deployment.yml
+        - ../K8s/services/service-registry/statefulset.yml
 
     - name: Deploy Auth Service Components
       kubernetes.core.k8s:
