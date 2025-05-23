@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # Create namespace
-kubectl apply -f elk-namespace.yml
+kubectl apply -f ./elk-namespace.yml
 
 # Deploy Elasticsearch
-kubectl apply -f elasticsearch/elasticsearch-deployment.yml
+kubectl apply -f ./elasticsearch/elasticsearch-deployment.yml
 
 # Wait for Elasticsearch to be ready
 echo "Waiting for Elasticsearch to be ready..."
 kubectl wait --namespace=elk --for=condition=ready pod -l app=elasticsearch --timeout=300s
 
 # Deploy Logstash
-kubectl apply -f logstash/logstash-deployment.yml
+kubectl apply -f ./logstash/logstash-deployment.yml
 
 # Deploy Kibana
-kubectl apply -f kibana/kibana-deployment.yml
+kubectl apply -f ./kibana/kibana-deployment.yml
 
 # Deploy Filebeat
-kubectl apply -f filebeat/filebeat-kubernetes.yml
+kubectl apply -f ./filebeat/filebeat-kubernetes.yml
 
 echo "ELK stack deployment completed!"
 echo "Waiting for all components to be ready..."
