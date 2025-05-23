@@ -1,35 +1,25 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: jwt-config
-data:
-  jwt.secret: u8B+zK3sD9qZ47tR4xtmu3DyQzFX7FHTYfaU2ZKIV6U=
-  jwt.expiration: "86400000"
-
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-service-app
+  name: doctor-service-app
   labels:
-    app: auth-service-app
+    app: doctor-service-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth-service-app
+      app: doctor-service-app
   template:
     metadata:
       labels:
-        app: auth-service-app
+        app: doctor-service-app
     spec:
       containers:
-        - name: auth-service-app
-          image: bhavya28122251/auth-service
+        - name: doctor-service-app
+          image: bhavya28122251/doctor-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
+            - containerPort: 8083
           env:
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
@@ -83,17 +73,6 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
-            - name: JWT_SECRET
-              valueFrom:
-                configMapKeyRef:
-                  name: jwt-config
-                  key: jwt.secret
-            - name: JWT_EXPIRATION  
-              valueFrom:
-                configMapKeyRef:
-                  name: jwt-config
-                  key: jwt.expiration
-
           resources:
             requests:
               memory: "512Mi"
@@ -101,15 +80,3 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: auth-service-svc
-spec:
-  selector:
-    app: auth-service-app
-  ports:
-    - port: 8081
-      targetPort: 8081

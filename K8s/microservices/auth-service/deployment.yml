@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: doctor-service-app
+  name: auth-service-app
   labels:
-    app: doctor-service-app
+    app: auth-service-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: doctor-service-app
+      app: auth-service-app
   template:
     metadata:
       labels:
-        app: doctor-service-app
+        app: auth-service-app
     spec:
       containers:
-        - name: doctor-service-app
-          image: bhavya28122251/doctor-service
+        - name: auth-service-app
+          image: bhavya28122251/auth-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 8083
+            - containerPort: 8081
           env:
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
@@ -73,6 +73,17 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: jwt-config
+                  key: jwt.secret
+            - name: JWT_EXPIRATION  
+              valueFrom:
+                configMapKeyRef:
+                  name: jwt-config
+                  key: jwt.expiration
+
           resources:
             requests:
               memory: "512Mi"
@@ -80,18 +91,3 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
-
-
-            
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: doctor-service-svc
-spec:
-  selector:
-    app: doctor-service-app
-  ports:
-    - port: 8083
-      targetPort: 8083

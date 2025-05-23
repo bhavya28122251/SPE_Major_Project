@@ -1,0 +1,121 @@
+---
+- name: Deploy Healthcare Application
+  hosts: kubernetes
+  connection: local
+  tasks:
+    - name: Create namespace
+      kubernetes.core.k8s:
+        name: healthcare-app
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    # Common Configurations and Secrets
+    - name: Deploy Common Configurations
+      kubernetes.core.k8s:
+        state: present
+        src: ../K8s/config/common-config.yml
+        namespace: healthcare-app
+
+    - name: Deploy MySQL Secrets
+      kubernetes.core.k8s:
+        state: present
+        src: ../K8s/config/mysql-secret.yml
+        namespace: healthcare-app
+
+    # Storage Configuration
+    - name: Deploy Persistent Volume and Claims
+      kubernetes.core.k8s:
+        state: present
+        src: ../K8s/storage/pv-pvc.yml
+        namespace: healthcare-app
+
+    # MySQL Deployment
+    - name: Deploy MySQL ConfigMap
+      kubernetes.core.k8s:
+        state: present
+        src: ../K8s/microservices/mysql/config.yml
+        namespace: healthcare-app
+
+    - name: Deploy MySQL Service and Deployment
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/services/mysql/service.yml
+        - ../K8s/services/mysql/deployment.yml
+
+    - name: Deploy Service Registry Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/services/service-registry/config.yml
+        - ../K8s/services/service-registry/service.yml
+        - ../K8s/services/service-registry/deployment.yml
+
+    - name: Deploy Auth Service Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/microservices/auth-service/config.yml
+        - ../K8s/microservices/auth-service/service.yml
+        - ../K8s/microservices/auth-service/deployment.yml
+
+    - name: Deploy Patient Service Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/microservices/patient-service/service.yml
+        - ../K8s/microservices/patient-service/deployment.yml
+
+    - name: Deploy Doctor Service Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/microservices/doctor-service/service.yml
+        - ../K8s/microservices/doctor-service/deployment.yml
+
+    - name: Deploy Appointment Service Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/microservices/appointment-service/service.yml
+        - ../K8s/microservices/appointment-service/deployment.yml
+
+    - name: Deploy API Gateway Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/microservices/api-gateway/config.yml
+        - ../K8s/microservices/api-gateway/service.yml
+        - ../K8s/microservices/api-gateway/deployment.yml
+
+    # Frontend Deployment
+    - name: Deploy Frontend Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/frontend/service.yml
+        - ../K8s/frontend/deployment.yml
+
+    # Ingress Configuration
+    - name: Deploy Ingress Rules
+      kubernetes.core.k8s:
+        state: present
+        src: ../K8s/ingress/ingress.yml
+        namespace: healthcare-app 

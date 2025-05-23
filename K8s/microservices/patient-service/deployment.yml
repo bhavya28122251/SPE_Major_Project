@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appointment-service-app
+  name: patient-service-app
   labels:
-    app: appointment-service-app
+    app: patient-service-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: appointment-service-app
+      app: patient-service-app
   template:
     metadata:
       labels:
-        app: appointment-service-app
+        app: patient-service-app
     spec:
       containers:
-        - name: appointment-service-app
-          image: bhavya28122251/appointment-service
+        - name: patient-service-app
+          image: bhavya28122251/patient-service
           imagePullPolicy: Always
           ports:
-            - containerPort: 8084
+            - containerPort: 8082
           env:
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
@@ -73,7 +73,6 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
-
           resources:
             requests:
               memory: "512Mi"
@@ -81,15 +80,3 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
-            
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: appointment-service-svc
-spec:
-  selector:
-    app: appointment-service-app
-  ports:
-    - port: 8084
-      targetPort: 8084

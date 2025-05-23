@@ -38,16 +38,3 @@ spec:
           persistentVolumeClaim:
             claimName: mysql-pvc-new
       restartPolicy: Always
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql-svc
-spec:
-  selector:
-    app: mysql
-  ports:
-    - port: 3306
-      targetPort: 3306

@@ -29,16 +29,3 @@ spec:
           env:
             - name: REACT_APP_API_URL
               value: "/api"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend-service
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: 80
-      protocol: TCP
-  selector:
-    app: frontend 

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jwt-config
+data:
+  jwt.secret: u8B+zK3sD9qZ47tR4xtmu3DyQzFX7FHTYfaU2ZKIV6U=
+  jwt.expiration: "86400000"
