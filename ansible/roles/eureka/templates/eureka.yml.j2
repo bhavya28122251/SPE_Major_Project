@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka
+spec:
+  ports:
+    - port: {{ eureka_port }}
+      targetPort: {{ eureka_port }}
+  selector:
+    app: eureka
+  clusterIP: None
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka
+spec:
+  serviceName: eureka
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      containers:
+        - name: eureka
+          image: {{ docker_username }}/eureka:latest
+          ports:
+            - containerPort: {{ eureka_port }}
+          imagePullPolicy: Always 

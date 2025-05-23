@@ -1,0 +1,6 @@
+---
+- name: Deploy API Gateway
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'api-gateway.yml.j2') | from_yaml_all | list }}"
+    namespace: healthcare-app 

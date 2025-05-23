@@ -1,0 +1,6 @@
+---
+- name: Deploy Doctor Service
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'doctor-service.yml.j2') | from_yaml_all | list }}"
+    namespace: healthcare-app 

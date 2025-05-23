@@ -1,0 +1,7 @@
+# Ignore actual vault file but not the template
+group_vars/all/vault.yml
+# Don't ignore the template
+!group_vars/all/vault.yml.template
+
+# Ignore vault password file
+.vault_pass 

@@ -1,0 +1,6 @@
+---
+- name: Create MySQL Resources
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'mysql.yml.j2') | from_yaml_all | list }}"
+    namespace: "{{ namespace }}" 

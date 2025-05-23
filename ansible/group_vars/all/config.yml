@@ -1,0 +1,41 @@
+# Docker configuration
+docker_username: "bhavya28122251"
+namespace: "healthcare-app"
+
+# Database configuration
+db_user: "healthcare_user"
+db_name: "healthcare_db"
+
+# Service ports
+eureka_port: 8761
+gateway_port: 8080
+auth_port: 8081
+patient_port: 8082
+doctor_port: 8083
+appointment_port: 8084
+
+# Service Discovery
+eureka_service_address: http://eureka-0.eureka.healthcare-app.svc.cluster.local:8761/eureka/
+
+# Database configurations
+db_port: 3306
+db_host: mysql.healthcare-app.svc.cluster.local
+
+# Internal Service Ports (used by Eureka and internal communication)
+config_server_port: 8888
+
+# API Gateway Configuration
+api_gateway_routes:
+  auth: /auth/**
+  patient: /patients/**
+  doctor: /doctors/**
+  appointment: /appointments/**
+
+# Frontend Configuration
+frontend_port: 3000
+
+# Service URLs (for internal communication)
+patient_service_url: http://patient-service.healthcare-app.svc.cluster.local:${patient_port}
+doctor_service_url: http://doctor-service.healthcare-app.svc.cluster.local:${doctor_port}
+appointment_service_url: http://appointment-service.healthcare-app.svc.cluster.local:${appointment_port}
+auth_service_url: http://auth-service.healthcare-app.svc.cluster.local:${auth_port} 

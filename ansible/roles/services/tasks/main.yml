@@ -1,0 +1,24 @@
+---
+- name: Create Auth Service
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'auth-service.yml.j2') | from_yaml_all | list }}"
+    namespace: "{{ namespace }}"
+
+- name: Create Patient Service
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'patient-service.yml.j2') | from_yaml_all | list }}"
+    namespace: "{{ namespace }}"
+
+- name: Create Doctor Service
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'doctor-service.yml.j2') | from_yaml_all | list }}"
+    namespace: "{{ namespace }}"
+
+- name: Create Appointment Service
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'appointment-service.yml.j2') | from_yaml_all | list }}"
+    namespace: "{{ namespace }}" 

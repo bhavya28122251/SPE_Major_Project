@@ -8,11 +8,8 @@ pipeline {
     environment {
         DOCKER_USER = "bhavya28122251"
         DOCKER_CREDENTIALS_ID = "DockerHubCred"
-        KUBECONFIG = credentials('kubeconfig')
     }
 
-    
-    //Tesing3w632462
     stages {
         stage('Clone Repo') {
             steps {
@@ -89,11 +86,13 @@ pipeline {
 
         stage('Setup Kubernetes') {
             steps {
-                sh '''
-                    mkdir -p ~/.kube
-                    echo "$KUBECONFIG" > ~/.kube/config
-                    chmod 600 ~/.kube/config
-                '''
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                    sh '''
+                        mkdir -p ~/.kube
+                        cp "$KUBECONFIG_FILE" ~/.kube/config
+                        chmod 600 ~/.kube/config
+                    '''
+                }
             }
         }
 
@@ -128,12 +127,14 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 dir('ansible-simple') {
-                    sh '''
-                        export LC_ALL=C.UTF-8
-                        export LANG=C.UTF-8
-                        export KUBECONFIG=~/.kube/config
-                        ansible-playbook -i inventory.ini deploy.yml
-                    '''
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                        sh '''
+                            export LC_ALL=C.UTF-8
+                            export LANG=C.UTF-8
+                            export KUBECONFIG=$KUBECONFIG_FILE
+                            ansible-playbook -i inventory.ini deploy.yml
+                        '''
+                    }
                 }
             }
         }
@@ -149,7 +150,6 @@ pipeline {
     }
 
     post {
-        
         success {
             echo '✅ All images built, tested, and pushed successfully.'
         }

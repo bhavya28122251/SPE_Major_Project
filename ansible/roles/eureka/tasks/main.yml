@@ -1,0 +1,6 @@
+---
+- name: Create Eureka Resources
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'eureka.yml.j2') | from_yaml_all | list }}"
+    namespace: "{{ namespace }}" 
