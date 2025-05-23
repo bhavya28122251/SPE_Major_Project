@@ -77,4 +77,9 @@ public class DoctorController {
         doctorService.deleteDoctor(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getDoctorCount() {
+        return ResponseEntity.ok(doctorService.getDoctorCount());
+    }
 } 

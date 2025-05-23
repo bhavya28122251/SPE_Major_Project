@@ -106,4 +106,8 @@ public class PatientService {
                 patient.getUserId()
         );
     }
+
+    public Long getPatientCount() {
+        return patientRepository.count();
+    }
 } 

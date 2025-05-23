@@ -129,5 +129,9 @@ public class DoctorService {
                         .collect(Collectors.toSet())
         );
     }
+
+    public Long getDoctorCount() {
+        return doctorRepository.count();
+    }
 }
  

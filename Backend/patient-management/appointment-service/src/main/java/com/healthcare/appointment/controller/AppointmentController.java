@@ -4,6 +4,7 @@ import com.healthcare.appointment.dto.AppointmentRequest;
 import com.healthcare.appointment.dto.AppointmentResponse;
 import com.healthcare.appointment.entity.AppointmentStatus;
 import com.healthcare.appointment.service.AppointmentService;
+import com.healthcare.appointment.dto.AppointmentStats;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -105,5 +106,10 @@ public class AppointmentController {
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<AppointmentStats> getAppointmentStats() {
+        return ResponseEntity.ok(appointmentService.getAppointmentStats());
     }
 } 

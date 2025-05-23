@@ -68,4 +68,9 @@ public class PatientController {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getPatientCount() {
+        return ResponseEntity.ok(patientService.getPatientCount());
+    }
 } 

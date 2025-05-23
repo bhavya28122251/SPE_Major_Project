@@ -8,12 +8,14 @@ import com.healthcare.appointment.entity.Appointment;
 import com.healthcare.appointment.entity.AppointmentStatus;
 import com.healthcare.appointment.repository.AppointmentRepository;
 import com.healthcare.appointment.util.AvailabilityUtil;
+import com.healthcare.appointment.dto.AppointmentStats;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,6 +166,18 @@ public class AppointmentService {
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
         appointment.setStatus(status);
         return mapToResponse(appointmentRepository.save(appointment));
+    }
+
+    public AppointmentStats getAppointmentStats() {
+        AppointmentStats stats = new AppointmentStats();
+        
+        stats.setTotalAppointments(appointmentRepository.count());
+        stats.setPendingAppointments(appointmentRepository.countByStatus(AppointmentStatus.PENDING));
+        stats.setCompletedAppointments(appointmentRepository.countByStatus(AppointmentStatus.COMPLETED));
+        stats.setCancelledAppointments(appointmentRepository.countByStatus(AppointmentStatus.CANCELLED));
+        stats.setTodayAppointments(appointmentRepository.countByAppointmentDateTime(LocalDateTime.now()));
+        
+        return stats;
     }
 
     private AppointmentResponse mapToResponse(Appointment appointment) {
