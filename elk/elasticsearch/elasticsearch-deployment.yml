@@ -21,6 +21,13 @@ spec:
           name: http
         - containerPort: 9300
           name: transport
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
         env:
         - name: discovery.type
           value: single-node

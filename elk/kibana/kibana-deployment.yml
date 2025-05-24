@@ -19,6 +19,13 @@ spec:
         ports:
         - containerPort: 5601
           name: http
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
         env:
         - name: ELASTICSEARCH_HOSTS
           value: http://elasticsearch:9200
