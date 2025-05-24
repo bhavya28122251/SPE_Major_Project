@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Paper, Typography, Button } from '@mui/material';
+import { Container, Grid, Paper, Typography, Button, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api, { API_ENDPOINTS } from '../../utils/apiConfig';
+
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -29,8 +30,8 @@ const AdminDashboard = () => {
           setStats({
             totalPatients: patientsRes.data,
             totalDoctors: doctorsRes.data,
-            totalAppointments: appointmentsRes.data.total,
-            pendingAppointments: appointmentsRes.data.pending
+            totalAppointments: appointmentsRes.data.totalAppointments,
+  	    pendingAppointments: appointmentsRes.data.pendingAppointments
           });
         } catch (error) {
           console.log('Error fetching stats:', error);
@@ -66,46 +67,31 @@ const AdminDashboard = () => {
     </Paper>
   );
 
-  return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Admin Dashboard
-      </Typography>
+return (
+  <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Typography variant="h4">Admin Dashboard</Typography>
       <Button variant="contained" color="secondary" onClick={handleLogout}>
         Logout
       </Button>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Total Patients"
-            value={stats.totalPatients}
-            color="#1976d2"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Total Doctors"
-            value={stats.totalDoctors}
-            color="#2e7d32"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Total Appointments"
-            value={stats.totalAppointments}
-            color="#ed6c02"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Pending Appointments"
-            value={stats.pendingAppointments}
-            color="#9c27b0"
-          />
-        </Grid>
+    </Box>
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard title="Total Patients" value={stats.totalPatients} color="#1976d2" />
       </Grid>
-    </Container>
-  );
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard title="Total Doctors" value={stats.totalDoctors} color="#2e7d32" />
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard title="Total Appointments" value={stats.totalAppointments} color="#ed6c02" />
+      </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <StatCard title="Pending Appointments" value={stats.pendingAppointments} color="#9c27b0" />
+      </Grid>
+    </Grid>
+  </Container>
+);
+
 };
 
 export default AdminDashboard;

@@ -60,16 +60,23 @@ function PatientManagement() {
     },
   ];
 
-  const fetchPatients = useCallback(async () => {
-    try {
-      const response = await axios.get('http://localhost:8082/api/patients', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPatients(response.data);
-    } catch (error) {
-      setError('Failed to fetch patients');
-    }
-  }, [token]);
+const fetchPatients = useCallback(async () => {
+  try {
+    const response = await axios.get('http://localhost:8085/api/patients', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const formattedPatients = response.data.map((patient) => ({
+      ...patient,
+      name: `${patient.firstName} ${patient.lastName}`,
+      phone: patient.phoneNumber, // mapping backend field to match DataGrid
+    }));
+
+    setPatients(formattedPatients);
+  } catch (error) {
+    setError('Failed to fetch patients');
+  }
+}, [token]);
 
   useEffect(() => {
     fetchPatients();
@@ -111,7 +118,7 @@ function PatientManagement() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this patient?')) {
       try {
-        await axios.delete(`http://localhost:8082/api/patients/${id}`, {
+        await axios.delete(`http://localhost:8085/api/patients/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         fetchPatients();
@@ -126,14 +133,14 @@ function PatientManagement() {
     try {
       if (selectedPatient) {
         await axios.put(
-          `http://localhost:8082/api/patients/${selectedPatient.id}`,
+          `http://localhost:8085/api/patients/${selectedPatient.id}`,
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
       } else {
-        await axios.post('http://localhost:8082/api/patients', formData, {
+        await axios.post('http://localhost:8085/api/patients', formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

@@ -67,6 +67,7 @@ function Login() {
       if (response.data && response.data.token) {
         dispatch(loginSuccess({
           user: {
+            id: response.data.id,
             username: response.data.username,
             email: response.data.email,
             fullName: response.data.fullName,
@@ -78,6 +79,7 @@ function Login() {
         // Store token in localStorage
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify({
+          id: response.data.id,
           username: response.data.username,
           email: response.data.email,
           fullName: response.data.fullName,
@@ -145,7 +147,7 @@ function Login() {
               id="username"
               label="Username"
               name="username"
-              autoComplete="username"
+              autoComplete="off"
               autoFocus
               value={formData.username}
               onChange={handleChange}
@@ -161,7 +163,7 @@ function Login() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              autoComplete="off"
               value={formData.password}
               onChange={handleChange}
               error={!!validationErrors.password}
