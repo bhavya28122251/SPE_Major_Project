@@ -12,8 +12,7 @@ spec:
   selector:
     app: eureka
 
----                  
-
+---
 apiVersion: v1
 kind: Service
 metadata:
