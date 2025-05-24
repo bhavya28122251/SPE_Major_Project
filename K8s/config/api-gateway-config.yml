@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: api-gateway-config
-data:
-  EUREKA_SERVER_ADDRESS: "http://eureka-0.eureka.healthcare-app.svc.cluster.local:8761/eureka/" 
