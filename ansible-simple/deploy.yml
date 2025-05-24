@@ -17,10 +17,16 @@
         src: ../K8s/config/common-config.yml
         namespace: healthcare-app
 
+    # - name: Deploy MySQL Secrets
+    #   kubernetes.core.k8s:
+    #     state: present
+    #     src: ../K8s/config/mysql-secret.yml
+    #     namespace: healthcare-app
+
     - name: Deploy MySQL Secrets
       kubernetes.core.k8s:
         state: present
-        src: ../K8s/config/mysql-secret.yml
+        definition: "{{ lookup('file', '../K8s/config/mysql-secret.yml') | from_yaml }}"
         namespace: healthcare-app
 
     # Storage Configuration
