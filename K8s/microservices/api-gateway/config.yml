@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: api-gateway-config
 data:
-  EUREKA_SERVER_ADDRESS: "http://eureka-0.eureka.default.svc.cluster.local:8761/eureka/"
+  EUREKA_SERVER_ADDRESS: "http://eureka-0.healthcare-app.default.svc.cluster.local:8761/eureka/"
