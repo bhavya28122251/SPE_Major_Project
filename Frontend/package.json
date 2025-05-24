@@ -22,16 +22,17 @@
     "web-vitals": "^3.5.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-private-methods": "^7.23.3",
     "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.3",
     "@babel/plugin-transform-numeric-separator": "^7.23.3",
     "@babel/plugin-transform-optional-chaining": "^7.23.3",
+    "@babel/plugin-transform-private-methods": "^7.23.3",
     "@babel/plugin-transform-private-property-in-object": "^7.23.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",
-    "eslint-config-react-app": "^7.0.1"
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-jest": "^28.11.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,9 +42,11 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+      "react-app"
+    ],
+    "env": {
+      "jest": true
+    }
   },
   "browserslist": {
     "production": [
