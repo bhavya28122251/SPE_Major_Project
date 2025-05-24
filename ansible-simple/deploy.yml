@@ -26,9 +26,8 @@
     - name: Deploy MySQL Secrets
       kubernetes.core.k8s:
         state: present
-        definition: "{{ lookup('file', '../K8s/config/mysql-secret.yml') | from_yaml }}"
+        definition: "{{ lookup('ansible.builtin.file', '../K8s/config/mysql-secret.yml') | from_yaml }}"
         namespace: healthcare-app
-
     # Storage Configuration
     - name: Deploy Persistent Volume and Claims
       kubernetes.core.k8s:
