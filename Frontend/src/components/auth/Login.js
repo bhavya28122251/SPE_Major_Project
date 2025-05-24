@@ -11,9 +11,9 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import axios from 'axios';
 import { loginStart, loginSuccess, loginFailure } from '../../store/slices/authSlice';
 import { handleApiError } from '../../utils/errorHandler';
-import api, { API_ENDPOINTS } from '../../utils/apiConfig';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -39,22 +39,22 @@ function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    // Clear validation error when user starts typing
+
     if (validationErrors[name]) {
-      setValidationErrors(prev => ({
+      setValidationErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: '',
       }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -62,31 +62,24 @@ function Login() {
     dispatch(loginStart());
 
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, formData);
-      
+      const response = await axios.post('http://localhost:8081/api/auth/login', formData, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
       if (response.data && response.data.token) {
-        dispatch(loginSuccess({
-          user: {
-            id: response.data.id,
-            username: response.data.username,
-            email: response.data.email,
-            fullName: response.data.fullName,
-            role: response.data.role,
-          },
-          token: response.data.token,
-        }));
-        
-        // Store token in localStorage
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify({
+        const userData = {
           id: response.data.id,
           username: response.data.username,
           email: response.data.email,
           fullName: response.data.fullName,
           role: response.data.role,
-        }));
-        
-        // Redirect based on user role
+        };
+
+        dispatch(loginSuccess({ user: userData, token: response.data.token }));
+
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(userData));
+
         switch (response.data.role) {
           case 'ADMIN':
             navigate('/admin');
@@ -132,7 +125,7 @@ function Login() {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          
+
           {error && (
             <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
               {error}
@@ -179,11 +172,7 @@ function Login() {
             >
               {loading ? <CircularProgress size={24} /> : 'Sign In'}
             </Button>
-            <Button
-              fullWidth
-              variant="text"
-              onClick={() => navigate('/register')}
-            >
+            <Button fullWidth variant="text" onClick={() => navigate('/register')}>
               Don't have an account? Sign Up
             </Button>
           </Box>
@@ -193,4 +182,4 @@ function Login() {
   );
 }
 
-export default Login; 
+export default Login;

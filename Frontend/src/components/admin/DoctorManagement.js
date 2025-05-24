@@ -96,7 +96,7 @@ function DoctorManagement() {
 
   const fetchDoctors = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8085/api/doctors', {
+      const response = await axios.get('http://localhost:8083/api/doctors', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDoctors(response.data);
@@ -154,7 +154,7 @@ function DoctorManagement() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this doctor?')) {
       try {
-        await axios.delete(`http://localhost:8085/api/doctors/${id}`, {
+        await axios.delete(`http://localhost:8083/api/doctors/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         fetchDoctors();
@@ -169,14 +169,14 @@ function DoctorManagement() {
     try {
       if (selectedDoctor) {
         await axios.put(
-          `http://localhost:8085/api/doctors/${selectedDoctor.id}`,
+          `http://localhost:8083/api/doctors/${selectedDoctor.id}`,
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
       } else {
-        await axios.post('http://localhost:8085/api/doctors', formData, {
+        await axios.post('http://localhost:8083/api/doctors', formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

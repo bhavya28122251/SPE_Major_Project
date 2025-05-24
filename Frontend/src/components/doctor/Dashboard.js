@@ -17,10 +17,10 @@ const DoctorDashboard = () => {
     const fetchData = async () => {
       try {
         const [statsRes, appointmentsRes] = await Promise.all([
-          axios.get(`http://localhost:8085/api/appointments/doctor/${user.id}/stats`, {
+          axios.get(`http://localhost:8084/api/appointments/doctor/${user.id}/stats`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get(`http://localhost:8085/api/appointments/doctor/${user.id}/recent`, {
+          axios.get(`http://localhost:8084/api/appointments/doctor/${user.id}/recent`, {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);

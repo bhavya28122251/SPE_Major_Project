@@ -14,7 +14,7 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import api, { API_ENDPOINTS } from '../../utils/apiConfig';
+import axios from 'axios';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 0, // 0 for PATIENT, 1 for DOCTOR
+    role: 3, // Default to Patient
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,13 +48,16 @@ function Register() {
     setLoading(true);
 
     try {
-      await api.post(API_ENDPOINTS.AUTH.REGISTER, {
+      await axios.post('http://localhost:8081/api/auth/register', {
         username: formData.username,
         fullName: formData.fullName,
         email: formData.email,
         password: formData.password,
         role: parseInt(formData.role),
+      }, {
+        headers: { 'Content-Type': 'application/json' }
       });
+
       navigate('/login');
     } catch (error) {
       setError(
@@ -188,4 +191,4 @@ function Register() {
   );
 }
 
-export default Register; 
+export default Register;
