@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
+    # Removed rewrite-target
 spec:
   ingressClassName: nginx
   rules:
@@ -24,4 +24,4 @@ spec:
           service:
             name: frontend-service
             port:
-              number: 80 
+              number: 80

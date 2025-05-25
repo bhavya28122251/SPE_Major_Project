@@ -25,15 +25,15 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: SPRING_APPLICATION_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: doctor-service-config
-                  key: SPRING_APPLICATION_NAME
+            # - name: SPRING_APPLICATION_NAME
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: common-config
+            #       key: SPRING_APPLICATION_NAME
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
-                  name: doctor-service-config
+                  name: common-config
                   key: EUREKA_SERVER_ADDRESS
             - name: SPRING_DATASOURCE_URL
               valueFrom:
@@ -82,3 +82,15 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083   # Change to your service's port
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083  # Change to your service's port
+            initialDelaySeconds: 10
+            periodSeconds: 5
