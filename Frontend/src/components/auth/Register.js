@@ -48,7 +48,7 @@ function Register() {
     setLoading(true);
 
     try {
-      await axios.post('http://patient-management.local/api/auth/register', {
+      await axios.post('http://localhost:8085/api/auth/register', {
         username: formData.username,
         fullName: formData.fullName,
         email: formData.email,

@@ -25,11 +25,11 @@ spec:
               value: healthcare_db
           resources:
             requests:
-              memory: "2Gi"
+              memory: "1Gi"
               cpu: "250m"
             limits:
-              memory: "4Gi"
-              cpu: "1"
+              memory: "2Gi"
+              cpu: "500m"          
           ports:
             - containerPort: 3306
           volumeMounts:
@@ -44,3 +44,4 @@ spec:
         - name: mysql-socket
           emptyDir: {}
       restartPolicy: Always
+      
