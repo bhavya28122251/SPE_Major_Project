@@ -1,70 +1,59 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "2"
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"deployment.kubernetes.io/revision":"1"},"creationTimestamp":"2025-05-24T07:35:07Z","generation":1,"labels":{"k8s-app":"metrics-server"},"name":"metrics-server","namespace":"kube-system","resourceVersion":"56026","uid":"cabc2e59-e7e1-4178-bfc2-fe8ebf8bbe88"},"spec":{"progressDeadlineSeconds":600,"replicas":1,"revisionHistoryLimit":10,"selector":{"matchLabels":{"k8s-app":"metrics-server"}},"strategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"creationTimestamp":null,"labels":{"k8s-app":"metrics-server"}},"spec":{"containers":[{"args":["--cert-dir=/tmp","--secure-port=443","--kubelet-insecure-tls","--kubelet-preferred-address-types=InternalIP","--kubelet-use-node-status-port","--metric-resolution=15s"],"image":"registry.k8s.io/metrics-server/metrics-server:v0.7.2","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/livez","port":"https","scheme":"HTTPS"},"periodSeconds":10,"successThreshold":1,"timeoutSeconds":1},"name":"metrics-server","ports":[{"containerPort":10250,"name":"https","protocol":"TCP"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/readyz","port":"https","scheme":"HTTPS"},"initialDelaySeconds":20,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":1},"resources":{"requests":{"cpu":"100m","memory":"200Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/tmp","name":"tmp-dir"}]}],"dnsPolicy":"ClusterFirst","nodeSelector":{"kubernetes.io/os":"linux"},"priorityClassName":"system-cluster-critical","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"serviceAccount":"metrics-server","serviceAccountName":"metrics-server","terminationGracePeriodSeconds":30,"volumes":[{"emptyDir":{},"name":"tmp-dir"}]}}},"status":{"conditions":[{"lastTransitionTime":"2025-05-24T07:35:07Z","lastUpdateTime":"2025-05-24T07:35:07Z","message":"Deployment does not have minimum availability.","reason":"MinimumReplicasUnavailable","status":"False","type":"Available"},{"lastTransitionTime":"2025-05-24T07:45:08Z","lastUpdateTime":"2025-05-24T07:45:08Z","message":"ReplicaSet \"metrics-server-6f7dd4c4c4\" has timed out progressing.","reason":"ProgressDeadlineExceeded","status":"False","type":"Progressing"}],"observedGeneration":1,"replicas":1,"unavailableReplicas":1,"updatedReplicas":1}}
-  creationTimestamp: "2025-05-24T07:35:07Z"
-  generation: 2
-  labels:
-    k8s-app: metrics-server
   name: metrics-server
   namespace: kube-system
-  resourceVersion: "60729"
-  uid: cabc2e59-e7e1-4178-bfc2-fe8ebf8bbe88
+  labels:
+    k8s-app: metrics-server
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       k8s-app: metrics-server
   strategy:
+    type: RollingUpdate
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 0
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         k8s-app: metrics-server
     spec:
       containers:
-      - args:
-        - --cert-dir=/tmp
-        - --secure-port=4443
-        - --kubelet-insecure-tls
-        - --kubelet-preferred-address-types=InternalIP
-        - --kubelet-use-node-status-port
-        - --metric-resolution=15s
+      - name: metrics-server
         image: registry.k8s.io/metrics-server/metrics-server:v0.7.2
         imagePullPolicy: IfNotPresent
+        args:
+          - --cert-dir=/tmp
+          - --secure-port=10250
+          - --kubelet-insecure-tls
+          - --kubelet-preferred-address-types=InternalIP
+          - --kubelet-use-node-status-port
+          - --metric-resolution=15s
+        ports:
+          - containerPort: 10250
+            name: https
+            protocol: TCP
         livenessProbe:
-          failureThreshold: 3
           httpGet:
             path: /livez
             port: https
             scheme: HTTPS
           periodSeconds: 10
-          successThreshold: 1
           timeoutSeconds: 1
-        name: metrics-server
-        ports:
-        - containerPort: 10250
-          name: https
-          protocol: TCP
-        readinessProbe:
+          successThreshold: 1
           failureThreshold: 3
+        readinessProbe:
           httpGet:
             path: /readyz
             port: https
             scheme: HTTPS
           initialDelaySeconds: 20
           periodSeconds: 10
-          successThreshold: 1
           timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
         resources:
           requests:
             cpu: 100m
@@ -73,45 +62,22 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 1000
           seccompProfile:
             type: RuntimeDefault
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /tmp
-          name: tmp-dir
-      dnsPolicy: ClusterFirst
+          - mountPath: /tmp
+            name: tmp-dir
+      volumes:
+        - name: tmp-dir
+          emptyDir: {}
       nodeSelector:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      serviceAccount: metrics-server
       serviceAccountName: metrics-server
+      restartPolicy: Always
       terminationGracePeriodSeconds: 30
-      volumes:
-      - emptyDir: {}
-        name: tmp-dir
-status:
-  conditions:
-  - lastTransitionTime: "2025-05-24T07:35:07Z"
-    lastUpdateTime: "2025-05-24T07:35:07Z"
-    message: Deployment does not have minimum availability.
-    reason: MinimumReplicasUnavailable
-    status: "False"
-    type: Available
-  - lastTransitionTime: "2025-05-24T08:50:35Z"
-    lastUpdateTime: "2025-05-24T08:50:35Z"
-    message: ReplicaSet "metrics-server-5ddfb99885" has timed out progressing.
-    reason: ProgressDeadlineExceeded
-    status: "False"
-    type: Progressing
-  observedGeneration: 2
-  replicas: 2
-  unavailableReplicas: 2
-  updatedReplicas: 1
+      dnsPolicy: ClusterFirst
