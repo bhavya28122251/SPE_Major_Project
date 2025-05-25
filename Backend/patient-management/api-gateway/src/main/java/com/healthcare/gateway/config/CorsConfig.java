@@ -14,15 +14,25 @@ public class CorsConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        corsConfig.setMaxAge(3600L);
+        
+        // Allow all necessary origins
+        corsConfig.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000",
+            "http://localhost:8078",
+            "http://localhost:8085",
+            "http://patient-management.local",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:8078"
+        ));
+        
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
         corsConfig.setAllowCredentials(true);
+        corsConfig.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
 
         return new CorsWebFilter(source);
     }
-} 
+}

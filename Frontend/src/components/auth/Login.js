@@ -62,7 +62,7 @@ function Login() {
     dispatch(loginStart());
 
     try {
-      const response = await axios.post('http://patient-management.local/api/auth/login', formData, {
+      const response = await axios.post('http://localhost:8081/api/auth/login', formData, {
         headers: { 'Content-Type': 'application/json' },
       });
 
