@@ -1,1 +1,2 @@
-com\healthcare\gateway\ApiGatewayApplication.class
+com/healthcare/gateway/config/CorsConfig.class
+com/healthcare/gateway/ApiGatewayApplication.class
