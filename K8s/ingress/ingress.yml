@@ -3,8 +3,7 @@ kind: Ingress
 metadata:
   name: app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    # Removed rewrite-target
+    nginx.ingress.kubernetes.io/use-regex: "true"       
 spec:
   ingressClassName: nginx
   rules:

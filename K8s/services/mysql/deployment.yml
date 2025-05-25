@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: mysql:8
+          image: mysql:8.4
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -23,25 +23,15 @@ spec:
                   key: mysql-root-password
             - name: MYSQL_DATABASE
               value: healthcare_db
-          resources:
-            requests:
-              memory: "1Gi"
-              cpu: "250m"
-            limits:
-              memory: "2Gi"
-              cpu: "500m"          
+            
           ports:
             - containerPort: 3306
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
-            - name: mysql-socket
-              mountPath: /var/run/mysqld
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
-            claimName: mysql-pvc-new
-        - name: mysql-socket
-          emptyDir: {}
-      restartPolicy: Always
+            claimName: mysql-pvc-new-1
+       
       
