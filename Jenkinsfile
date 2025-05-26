@@ -108,20 +108,20 @@ pipeline {
             }
         }
 
-        stage('Deploy ELK Stack') {
-            steps {
-                sh '''
-                    chmod +x elk/deploy-elk.sh
-                    ./elk/deploy-elk.sh
+        // stage('Deploy ELK Stack') {
+        //     steps {
+        //         sh '''
+        //             chmod +x elk/deploy-elk.sh
+        //             ./elk/deploy-elk.sh
                     
-                    # Wait for ELK stack to be ready
-                    echo "Waiting for ELK stack to be fully ready..."
-                    kubectl wait --namespace=elk --for=condition=ready pod -l app=elasticsearch --timeout=300s
-                    kubectl wait --namespace=elk --for=condition=ready pod -l app=logstash --timeout=300s
-                    kubectl wait --namespace=elk --for=condition=ready pod -l app=kibana --timeout=300s
-                '''
-            }
-        }
+        //             # Wait for ELK stack to be ready
+        //             echo "Waiting for ELK stack to be fully ready..."
+        //             kubectl wait --namespace=elk --for=condition=ready pod -l app=elasticsearch --timeout=300s
+        //             kubectl wait --namespace=elk --for=condition=ready pod -l app=logstash --timeout=300s
+        //             kubectl wait --namespace=elk --for=condition=ready pod -l app=kibana --timeout=300s
+        //         '''
+        //     }
+        // }
 
         stage('Install Dependencies') {
             steps {
