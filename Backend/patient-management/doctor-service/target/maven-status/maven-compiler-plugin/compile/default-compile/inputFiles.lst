@@ -1,0 +1,16 @@
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\repository\DoctorRepository.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\config\OpenApiConfig.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\repository\SpecialtyRepository.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\entity\Doctor.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\controller\SpecialtyController.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\service\DoctorService.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\config\CorsConfig.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\entity\Specialty.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\dto\SpecialtyResponse.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\controller\DoctorController.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\DoctorServiceApplication.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\dto\SpecialtyRequest.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\dto\DoctorResponse.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\service\SpecialtyService.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\config\DataInitializer.java
+D:\IIITB second sem\SPE-Major_project\SPE_Major_Project\Backend\patient-management\doctor-service\src\main\java\com\healthcare\doctor\dto\DoctorRequest.java
