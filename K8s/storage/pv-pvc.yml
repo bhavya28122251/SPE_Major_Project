@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pvc-new-1
+  name: mysql-pvc-new
 spec:
   accessModes:
     - ReadWriteOnce
