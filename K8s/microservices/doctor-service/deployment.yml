@@ -93,4 +93,4 @@ spec:
           #     path: /actuator/health/readiness
           #     port: 8083  # Change to your service's port
           #   initialDelaySeconds: 10
-          #   periodSeconds: 5
+          #   periodSeconds: 5ddttuxt
