@@ -2,13 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: doctor-service-svc
-  labels:
-    app: doctor-service-app
 spec:
   selector:
-    app: doctor-service-app
+    app: doctor-service
   ports:
-    - port: 8083
+    - port: 80
       targetPort: 8083
       protocol: TCP
   type: ClusterIP

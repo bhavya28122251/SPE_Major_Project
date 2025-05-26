@@ -4,7 +4,9 @@ metadata:
   name: patient-service-svc
 spec:
   selector:
-    app: patient-service-app
+    app: patient-service
   ports:
-    - port: 8082
+    - port: 80
       targetPort: 8082
+      protocol: TCP
+  type: ClusterIP

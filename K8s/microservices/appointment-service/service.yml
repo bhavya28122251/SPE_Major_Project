@@ -4,7 +4,9 @@ metadata:
   name: appointment-service-svc
 spec:
   selector:
-    app: appointment-service-app
+    app: appointment-service
   ports:
-    - port: 8084
+    - port: 80
       targetPort: 8084
+      protocol: TCP
+  type: ClusterIP
