@@ -153,7 +153,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
                 steps {
-                    dir('ansible-deploy') {
+                    dir('ansible_deploy') {
                         withCredentials([
                             file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE'),
                             string(credentialsId: 'ansible-vault-password', variable: 'VAULT_PASS')
