@@ -1,0 +1,5 @@
+ - name: Deploy Common Configurations
+   kubernetes.core.k8s:
+    state: present
+    src: ../K8s/config/common-config.yml
+    namespace: healthcare-app

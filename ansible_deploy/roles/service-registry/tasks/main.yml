@@ -1,0 +1,9 @@
+- name: Deploy Service Registry Components
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ item }}"
+    namespace: healthcare-app
+  with_items:
+    - ../K8s/services/service-registry/config.yml
+    - ../K8s/services/service-registry/service.yml
+    - ../K8s/services/service-registry/statefulset.yml

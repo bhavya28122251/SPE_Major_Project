@@ -1,0 +1,8 @@
+- name: Deploy Appointment Service Components
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ item }}"
+    namespace: healthcare-app
+  with_items:
+    - ../K8s/microservices/appointment-service/service.yml
+    - ../K8s/microservices/appointment-service/deployment.yml

@@ -136,43 +136,43 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                dir('ansible-simple') {
-                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
-                        sh '''
-                            export LC_ALL=C.UTF-8
-                            export LANG=C.UTF-8
-                            export KUBECONFIG=$KUBECONFIG_FILE
-                            ansible-playbook -i inventory.ini deploy.yml
-                        '''
-                    }
-                }
-            }
-        }
-
         // stage('Deploy to Kubernetes') {
-        //         steps {
-        //             dir('ansible-simple') {
-        //                 withCredentials([
-        //                     file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE'),
-        //                     string(credentialsId: 'ansible-vault-password', variable: 'VAULT_PASS')
-        //                 ]) {
-        //                     sh '''
-        //                         export LC_ALL=C.UTF-8
-        //                         export LANG=C.UTF-8
-        //                         export KUBECONFIG=$KUBECONFIG_FILE
-
-        //                         echo "$VAULT_PASS" > vault.txt
-
-        //                         ansible-playbook -i inventory.ini deploy.yml --vault-password-file vault.txt
-
-        //                         rm -f vault.txt
-        //                     '''
-        //                 }
+        //     steps {
+        //         dir('ansible-simple') {
+        //             withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+        //                 sh '''
+        //                     export LC_ALL=C.UTF-8
+        //                     export LANG=C.UTF-8
+        //                     export KUBECONFIG=$KUBECONFIG_FILE
+        //                     ansible-playbook -i inventory.ini deploy.yml
+        //                 '''
         //             }
         //         }
         //     }
+        // }
+
+        stage('Deploy to Kubernetes') {
+                steps {
+                    dir('ansible-simple') {
+                        withCredentials([
+                            file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE'),
+                            string(credentialsId: 'ansible-vault-password', variable: 'VAULT_PASS')
+                        ]) {
+                            sh '''
+                                export LC_ALL=C.UTF-8
+                                export LANG=C.UTF-8
+                                export KUBECONFIG=$KUBECONFIG_FILE
+
+                                echo "$VAULT_PASS" > vault.txt
+
+                                ansible-playbook -i inventory.ini deploy.yml --vault-password-file vault.txt
+
+                                rm -f vault.txt
+                            '''
+                        }
+                    }
+                }
+            }
 
 
         stage('Verify Deployment') {

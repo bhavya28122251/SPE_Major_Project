@@ -1,0 +1,20 @@
+- name: Deploy MySQL Secrets
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('ansible.builtin.file', 'vault/mysql-secret.yml') | from_yaml }}"
+    namespace: healthcare-app
+    # Storage Configuration
+- name: Deploy Persistent Volume and Claims
+  kubernetes.core.k8s:
+    state: present
+    src: ../K8s/storage/pv-pvc.yml
+    namespace: healthcare-app
+
+- name: Deploy MySQL Service and Deployment
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ item }}"
+    namespace: healthcare-app
+  with_items:
+    - ../K8s/services/mysql/service.yml
+    - ../K8s/services/mysql/deployment.yml

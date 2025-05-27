@@ -1,0 +1,5 @@
+- name: Deploy Ingress Rules
+  kubernetes.core.k8s:
+      state: present
+      src: ../K8s/ingress/ingress.yml
+      namespace: healthcare-app 

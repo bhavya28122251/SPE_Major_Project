@@ -1,0 +1,10 @@
+# Frontend Deployment
+    - name: Deploy Frontend Components
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: healthcare-app
+      with_items:
+        - ../K8s/frontend/service.yml
+        - ../K8s/frontend/deployment.yml
+

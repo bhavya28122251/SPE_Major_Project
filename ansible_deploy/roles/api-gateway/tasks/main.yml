@@ -1,0 +1,9 @@
+- name: Deploy API Gateway Components
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ item }}"
+    namespace: healthcare-app
+  with_items:
+    - ../K8s/microservices/api-gateway/config.yml
+    - ../K8s/microservices/api-gateway/service.yml
+    - ../K8s/microservices/api-gateway/deployment.yml
