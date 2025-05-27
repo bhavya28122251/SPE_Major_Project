@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,27 +33,27 @@ public class AppointmentService {
     @Transactional
     public AppointmentResponse createAppointment(AppointmentRequest request) {
         // Validate patient exists
-        ResponseEntity<Boolean> patientExists = patientServiceClient.existsById(request.getPatientId());
-        if (patientExists.getBody() == null || !patientExists.getBody()) {
-            throw new RuntimeException("Patient not found");
-        }
+//        ResponseEntity<Boolean> patientExists = patientServiceClient.existsById(request.getPatientId());
+//        if (patientExists.getBody() == null || !patientExists.getBody()) {
+//            throw new RuntimeException("Patient not found");
+//        }
 
-        // Validate doctor exists
-        ResponseEntity<Boolean> doctorExists = doctorServiceClient.existsById(request.getDoctorId());
-        if (doctorExists.getBody() == null || !doctorExists.getBody()) {
-            throw new RuntimeException("Doctor not found");
-        }
+//        // Validate doctor exists
+//        ResponseEntity<Boolean> doctorExists = doctorServiceClient.existsById(request.getDoctorId());
+//        if (doctorExists.getBody() == null || !doctorExists.getBody()) {
+//            throw new RuntimeException("Doctor not found");
+//        }
 
-        // Check doctor availability
-        ResponseEntity<Object> availabilityResponse = doctorServiceClient.getDoctorAvailability(request.getDoctorId());
-        if (availabilityResponse.getBody() == null) {
-            throw new RuntimeException("Could not fetch doctor availability");
-        }
+//        // Check doctor availability
+//        ResponseEntity<Object> availabilityResponse = doctorServiceClient.getDoctorAvailability(request.getDoctorId());
+//        if (availabilityResponse.getBody() == null) {
+//            throw new RuntimeException("Could not fetch doctor availability");
+//        }
 
-        String availabilityJson = availabilityResponse.getBody().toString();
-        if (!availabilityUtil.isDoctorAvailable(availabilityJson, request.getAppointmentDateTime())) {
-            throw new RuntimeException("Doctor is not available at the requested time");
-        }
+//        String availabilityJson = availabilityResponse.getBody().toString();
+//        if (!availabilityUtil.isDoctorAvailable(availabilityJson, request.getAppointmentDateTime())) {
+//            throw new RuntimeException("Doctor is not available at the requested time");
+//        }
 
         // Check if there's already an appointment at this time
         if (appointmentRepository.existsByDoctorIdAndAppointmentDateTime(
@@ -65,6 +67,7 @@ public class AppointmentService {
         appointment.setAppointmentDateTime(request.getAppointmentDateTime());
         appointment.setReason(request.getReason());
         appointment.setStatus(AppointmentStatus.SCHEDULED);
+        appointment.setNotes(request.getNotes());
 
         return mapToResponse(appointmentRepository.save(appointment));
     }
@@ -79,10 +82,10 @@ public class AppointmentService {
     @Transactional(readOnly = true)
     public List<AppointmentResponse> getAppointmentsByPatientId(Long patientId) {
         // Validate patient exists
-        ResponseEntity<Boolean> patientExists = patientServiceClient.existsById(patientId);
-        if (patientExists.getBody() == null || !patientExists.getBody()) {
-            throw new RuntimeException("Patient not found");
-        }
+//        ResponseEntity<Boolean> patientExists = patientServiceClient.existsById(patientId);
+//        if (patientExists.getBody() == null || !patientExists.getBody()) {
+//            throw new RuntimeException("Patient not found");
+//        }
 
         return appointmentRepository.findByPatientId(patientId).stream()
                 .map(this::mapToResponse)
@@ -180,6 +183,53 @@ public class AppointmentService {
         return stats;
     }
 
+    public Object getDoctorDetails(Long doctorId) {
+        ResponseEntity<Object> response = doctorServiceClient.getDoctorById(doctorId);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Could not fetch doctor details");
+        }
+    }
+
+    public String getDoctorName(Long doctorId) {
+        try {
+            Object doctorDetails = getDoctorDetails(doctorId);
+            // Assuming the doctor object has a "name" field
+            // You'll need to cast or extract based on the actual response structure
+            if (doctorDetails instanceof Map) {
+                return ((Map<?, ?>) doctorDetails).get("fullName").toString();
+            }
+            return "Unknown Doctor";
+        } catch (Exception e) {
+            return "Unknown Doctor";
+        }
+    }
+
+    public Object getPatientDetails(Long patientId) {
+        ResponseEntity<Object> response = patientServiceClient.getPatientById(patientId);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Could not fetch patient details");
+        }
+    }
+
+    public String getPatientName(Long patientId) {
+        try {
+            Object patientDetails = getPatientDetails(patientId);
+            // Extract patient name from the response
+            if (patientDetails instanceof Map) {
+                return ((Map<?, ?>) patientDetails).get("firstName").toString() + " " +((Map<?, ?>) patientDetails).get("lastName").toString();
+            }
+            return "Unknown Patient";
+        } catch (Exception e) {
+            return "Unknown Patient";
+        }
+    }
+
     private AppointmentResponse mapToResponse(Appointment appointment) {
         return new AppointmentResponse(
                 appointment.getId(),
@@ -190,7 +240,88 @@ public class AppointmentService {
                 appointment.getReason(),
                 appointment.getNotes() != null ? appointment.getNotes() : "",
                 appointment.getPatientUserId() != null ? appointment.getPatientUserId() : "",
-                appointment.getDoctorUserId() != null ? appointment.getDoctorUserId() : ""
+                appointment.getDoctorUserId() != null ? appointment.getDoctorUserId() : "",
+                getDoctorName(appointment.getDoctorId()),
+                getPatientName(appointment.getPatientId())
         );
     }
+
+    public AppointmentStats getAppointmentStatsByPatientId(Long patientId) {
+        long totalAppointments = appointmentRepository.countByPatientId(patientId);
+        long upcomingAppointments = appointmentRepository.countByPatientIdAndStatusAndAppointmentDateTimeAfter(
+                patientId, AppointmentStatus.SCHEDULED, LocalDateTime.now());
+        long completedAppointments = appointmentRepository.countByPatientIdAndStatus(
+                patientId, AppointmentStatus.COMPLETED);
+        long pendingAppointments = appointmentRepository.countByPatientIdAndStatus(
+                patientId, AppointmentStatus.COMPLETED);
+        long cancelledAppointments = appointmentRepository.countByPatientIdAndStatus(
+                patientId, AppointmentStatus.COMPLETED);
+        long todayAppointments =appointmentRepository.countByPatientIdAndStatus(
+                patientId, AppointmentStatus.COMPLETED);
+        return new AppointmentStats(
+                totalAppointments,
+                pendingAppointments,
+                completedAppointments,
+                cancelledAppointments,
+                todayAppointments,
+                upcomingAppointments
+        );
+    }
+
+    public List<AppointmentResponse> getUpcomingAppointmentsByPatientId(Long patientId) {
+        return appointmentRepository.findByPatientIdAndAppointmentDateTimeAfterOrderByAppointmentDateTime(
+                        patientId, LocalDateTime.now())
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public AppointmentStats getAppointmentStatsByDoctorId(Long doctorId) {
+        // Validate doctor exists
+        ResponseEntity<Boolean> doctorExists = doctorServiceClient.existsById(doctorId);
+        if (doctorExists.getBody() == null || !doctorExists.getBody()) {
+            throw new RuntimeException("Doctor not found");
+        }
+
+        long totalAppointments = appointmentRepository.countByDoctorId(doctorId);
+        long pendingAppointments = appointmentRepository.countByDoctorIdAndStatus(
+                doctorId, AppointmentStatus.PENDING);
+        long completedAppointments = appointmentRepository.countByDoctorIdAndStatus(
+                doctorId, AppointmentStatus.COMPLETED);
+        long cancelledAppointments = appointmentRepository.countByDoctorIdAndStatus(
+                doctorId, AppointmentStatus.CANCELLED);
+
+        // Calculate today's appointments
+        LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        long todayAppointments = appointmentRepository.countByDoctorIdAndAppointmentDateTimeBetween(
+                doctorId, startOfDay, endOfDay);
+
+        // Calculate upcoming appointments
+        long upcomingAppointments = appointmentRepository.countByDoctorIdAndStatusAndAppointmentDateTimeAfter(
+                doctorId, AppointmentStatus.SCHEDULED, LocalDateTime.now());
+
+        return new AppointmentStats(
+                totalAppointments,
+                pendingAppointments,
+                completedAppointments,
+                cancelledAppointments,
+                todayAppointments,
+                upcomingAppointments
+        );
+    }
+
+    public List<AppointmentResponse> getRecentAppointmentsByDoctorId(Long doctorId) {
+        // Validate doctor exists
+        ResponseEntity<Boolean> doctorExists = doctorServiceClient.existsById(doctorId);
+        if (doctorExists.getBody() == null || !doctorExists.getBody()) {
+            throw new RuntimeException("Doctor not found");
+        }
+
+        // Get recent appointments - last 5 appointments ordered by date
+        return appointmentRepository.findTop5ByDoctorIdOrderByAppointmentDateTimeDesc(doctorId).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
 } 

@@ -32,19 +32,19 @@ public class PatientController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get patient by ID", description = "Retrieve patient details by their ID")
-    public ResponseEntity<PatientResponse> getPatientById(@PathVariable Long id) {
+    public ResponseEntity<PatientResponse> getPatientById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(patientService.getPatientById(id));
     }
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get patient by user ID", description = "Retrieve patient details by their user ID")
-    public ResponseEntity<PatientResponse> getPatientByUserId(@PathVariable String userId) {
+    public ResponseEntity<PatientResponse> getPatientByUserId(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(patientService.getPatientByUserId(userId));
     }
 
     @GetMapping("/exists/{id}")
     @Operation(summary = "Check if patient exists", description = "Check if a patient exists with the given ID")
-    public ResponseEntity<Boolean> existsById(@PathVariable Long id) {
+    public ResponseEntity<Boolean> existsById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(patientService.existsById(id));
     }
 
@@ -57,14 +57,14 @@ public class PatientController {
     @PutMapping("/{id}")
     @Operation(summary = "Update patient", description = "Update patient details by their ID")
     public ResponseEntity<PatientResponse> updatePatient(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody PatientRequest request) {
         return ResponseEntity.ok(patientService.updatePatient(id, request));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete patient", description = "Delete a patient by their ID")
-    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePatient(@PathVariable("id") Long id) {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }

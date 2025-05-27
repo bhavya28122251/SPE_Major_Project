@@ -29,19 +29,19 @@ public class DoctorController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get doctor by ID", description = "Retrieve doctor details by their ID")
-    public ResponseEntity<DoctorResponse> getDoctorById(@PathVariable Long id) {
+    public ResponseEntity<DoctorResponse> getDoctorById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
 
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get doctor by user ID", description = "Retrieve doctor details by their user ID")
-    public ResponseEntity<DoctorResponse> getDoctorByUserId(@PathVariable String userId) {
+    public ResponseEntity<DoctorResponse> getDoctorByUserId(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(doctorService.getDoctorByUserId(userId));
     }
 
     @GetMapping("/exists/{id}")
     @Operation(summary = "Check if doctor exists", description = "Check if a doctor exists with the given ID")
-    public ResponseEntity<Boolean> existsById(@PathVariable Long id) {
+    public ResponseEntity<Boolean> existsById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(doctorService.existsById(id));
     }
 
@@ -59,21 +59,21 @@ public class DoctorController {
 
     @GetMapping("/specialty/{specialtyId}")
     @Operation(summary = "Get doctors by specialty", description = "Retrieve all doctors with a specific specialty")
-    public ResponseEntity<List<DoctorResponse>> getDoctorsBySpecialty(@PathVariable Long specialtyId) {
+    public ResponseEntity<List<DoctorResponse>> getDoctorsBySpecialty(@PathVariable("specialtyId") Long specialtyId) {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialty(specialtyId));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update doctor", description = "Update doctor details by their ID")
     public ResponseEntity<DoctorResponse> updateDoctor(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody DoctorRequest request) {
         return ResponseEntity.ok(doctorService.updateDoctor(id, request));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete doctor", description = "Delete a doctor by their ID")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteDoctor(@PathVariable("id") Long id) {
         doctorService.deleteDoctor(id);
         return ResponseEntity.noContent().build();
     }

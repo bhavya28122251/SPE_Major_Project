@@ -23,4 +23,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     boolean existsByDoctorIdAndAppointmentDateTime(Long doctorId, LocalDateTime appointmentDateTime);
     long countByStatus(AppointmentStatus status);
     long countByAppointmentDateTime(LocalDateTime date);
-} 
+
+    long countByPatientId(Long patientId);
+    long countByPatientIdAndStatusAndAppointmentDateTimeAfter(Long patientId, AppointmentStatus status, LocalDateTime dateTime);
+    long countByPatientIdAndStatus(Long patientId, AppointmentStatus status);
+    List<Appointment> findByPatientIdAndAppointmentDateTimeAfterOrderByAppointmentDateTime(Long patientId, LocalDateTime dateTime);
+    long countByDoctorId(Long doctorId);
+    long countByDoctorIdAndStatus(Long doctorId, AppointmentStatus status);
+    long countByDoctorIdAndAppointmentDateTimeBetween(Long doctorId, LocalDateTime start, LocalDateTime end);
+    long countByDoctorIdAndStatusAndAppointmentDateTimeAfter(Long doctorId, AppointmentStatus status, LocalDateTime dateTime);
+    List<Appointment> findTop5ByDoctorIdOrderByAppointmentDateTimeDesc(Long doctorId);
+}

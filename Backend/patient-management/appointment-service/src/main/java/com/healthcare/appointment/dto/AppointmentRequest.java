@@ -19,9 +19,6 @@ public class AppointmentRequest {
     @NotNull(message = "Doctor ID is required")
     private Long doctorId;
 
-    @NotNull(message = "Specialty ID is required")
-    private Long specialtyId;
-
     @NotNull(message = "Appointment date and time is required")
     @Future(message = "Appointment date must be in the future")
     private LocalDateTime appointmentDateTime;

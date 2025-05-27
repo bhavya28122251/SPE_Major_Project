@@ -1,7 +1,11 @@
 package com.healthcare.appointment.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class AppointmentStats {
     private long totalAppointments;
@@ -9,4 +13,5 @@ public class AppointmentStats {
     private long completedAppointments;
     private long cancelledAppointments;
     private long todayAppointments;
-} 
+    private long upcomingAppointments;
+}

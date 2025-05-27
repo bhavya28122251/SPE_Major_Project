@@ -53,7 +53,7 @@ public class Patient {
     @Column(nullable = false)
     private String emergencyContactPhone;
 
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false, unique = true)
     private String userId; // Reference to the user in auth service
 } 
  

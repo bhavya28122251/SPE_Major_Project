@@ -20,4 +20,6 @@ public class AppointmentResponse {
     private String notes;
     private String patientUserId;
     private String doctorUserId;
+    private String doctorName;
+    private String patientName;
 } 
