@@ -137,7 +137,7 @@ function DoctorAppointments() {
     } catch (error) {
       setError('Failed to fetch appointments');
     }
-  }, [token, user.id]);
+  }, [token, doctorId]); // Added doctorId here
 
   useEffect(() => {
     fetchAppointments();
@@ -278,4 +278,4 @@ function DoctorAppointments() {
   );
 }
 
-export default DoctorAppointments; 
+export default DoctorAppointments;

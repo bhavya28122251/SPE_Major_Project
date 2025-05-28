@@ -34,7 +34,7 @@ function BookAppointment() {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const { token, user } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
   const fetchDoctors = useCallback(async () => {
     try {
@@ -212,4 +212,4 @@ function BookAppointment() {
   );
 }
 
-export default BookAppointment; 
+export default BookAppointment;

@@ -109,20 +109,6 @@ function DoctorManagement() {
     fetchDoctors();
   }, [fetchDoctors]);
 
-  const handleOpen = () => {
-    setOpen(true);
-    setSelectedDoctor(null);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      specialties: [],
-      experience: '',
-      qualification: '',
-    });
-  };
-
   const handleClose = () => {
     setOpen(false);
     setSelectedDoctor(null);
@@ -320,4 +306,4 @@ function DoctorManagement() {
   );
 }
 
-export default DoctorManagement; 
+export default DoctorManagement;

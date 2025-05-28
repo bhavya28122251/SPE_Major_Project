@@ -82,17 +82,6 @@ const fetchPatients = useCallback(async () => {
     fetchPatients();
   }, [fetchPatients]);
 
-  const handleOpen = () => {
-    setOpen(true);
-    setSelectedPatient(null);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-    });
-  };
-
   const handleClose = () => {
     setOpen(false);
     setSelectedPatient(null);
@@ -244,4 +233,4 @@ const fetchPatients = useCallback(async () => {
   );
 }
 
-export default PatientManagement; 
+export default PatientManagement;
