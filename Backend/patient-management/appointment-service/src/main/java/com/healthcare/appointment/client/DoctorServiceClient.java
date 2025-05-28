@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "doctor-service", path = "/api/doctors")
+@FeignClient(name = "doctor-service", url = "${doctor.service.url:http://doctor-service-app.healthcare-app.svc.cluster.local:8083}", path = "/api/doctors")
 public interface DoctorServiceClient {
     
     @GetMapping("/{id}")
