@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "doctor-service", url = "http://localhost:8083", path = "/api/doctors")
+@FeignClient(name = "doctor-service", path = "/api/doctors")
 public interface DoctorServiceClient {
     
     @GetMapping("/{id}")
@@ -19,4 +19,4 @@ public interface DoctorServiceClient {
 
     @GetMapping("/{id}/availability")
     ResponseEntity<Object> getDoctorAvailability(@PathVariable("id") Long id);
-} 
+}
