@@ -7,3 +7,4 @@
     - ../K8s/microservices/auth-service/config.yml
     - ../K8s/microservices/auth-service/service.yml
     - ../K8s/microservices/auth-service/deployment.yml
+    - ../K8s/microservices/auth-service/HPA.yml
