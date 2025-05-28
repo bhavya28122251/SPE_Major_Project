@@ -27,7 +27,7 @@ function DoctorAppointments() {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const { token, user } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
   const doctorId = localStorage.getItem('doctorId');
 
 
