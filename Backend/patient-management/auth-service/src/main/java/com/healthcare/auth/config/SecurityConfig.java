@@ -40,8 +40,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.addAllowedOrigin("http://localhost:3000");
-                    config.addAllowedOrigin("https://frontend.local");
-                    config.addAllowedOrigin("https://healthcare-appointments.com");
+                    config.addAllowedOrigin("http://frontend.local");
+                    config.addAllowedOrigin("http://healthcare-appointments.com");
                     config.addAllowedMethod(HttpMethod.GET); // Allow GET method
                     config.addAllowedMethod(HttpMethod.POST); // Allow POST method
                     config.addAllowedMethod(HttpMethod.PUT); // Allow PUT method
