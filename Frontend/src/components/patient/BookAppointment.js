@@ -30,7 +30,7 @@ function BookAppointment() {
   const [formData, setFormData] = useState({
     appointmentDateTime: null,
     reason: '',
-    symptoms: '',
+    notes: '',
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -69,12 +69,13 @@ function BookAppointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const patientId = localStorage.getItem('patientId');
       const appointmentData = {
-        patientId: user.id,
+        patientId: patientId,
         doctorId: selectedDoctor.id,
         appointmentDateTime: formData.appointmentDateTime,
         reason: formData.reason,
-        symptoms: formData.symptoms,
+        notes: formData.notes,
         status: 'PENDING',
       };
 
@@ -114,21 +115,22 @@ function BookAppointment() {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    Dr. {doctor.name}
+                    {doctor.fullName}
                   </Typography>
                   <Typography color="textSecondary" gutterBottom>
                     {doctor.qualification}
                   </Typography>
                   <Typography variant="body2" gutterBottom>
-                    Experience: {doctor.experience} years
+                    Experience: {doctor.yearsOfExperience} years
                   </Typography>
                   <Box sx={{ mt: 1 }}>
                     {doctor.specialties.map((specialty, index) => (
                       <Chip
                         key={index}
-                        label={specialty}
+                        label={specialty.name}
                         size="small"
                         sx={{ mr: 0.5, mb: 0.5 }}
+                        title={specialty.description}
                       />
                     ))}
                   </Box>
@@ -149,7 +151,7 @@ function BookAppointment() {
 
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
           <DialogTitle>
-            Book Appointment with Dr. {selectedDoctor?.name}
+            Book Appointment with Dr. {selectedDoctor?.fullName}
           </DialogTitle>
           <DialogContent>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -187,13 +189,13 @@ function BookAppointment() {
                 margin="normal"
                 required
                 fullWidth
-                label="Symptoms"
-                name="symptoms"
+                label="Notes/Symptoms"
+                name="Notes/Symptoms"
                 multiline
                 rows={3}
-                value={formData.symptoms}
+                value={formData.notes}
                 onChange={(e) =>
-                  setFormData({ ...formData, symptoms: e.target.value })
+                  setFormData({ ...formData, notes: e.target.value })
                 }
               />
             </Box>

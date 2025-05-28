@@ -7,20 +7,24 @@ import {
   Button,
   Grid,
   Box,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const DoctorProfile = () => {
-  const { token, user } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
+  const doctorId = localStorage.getItem('doctorId');
+  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({
-    name: '',
+    fullName: '',
     email: '',
-    specialization: '',
-    experience: '',
-    qualification: '',
-    contactNumber: ''
+    phoneNumber: '',
+    bio: '',
+    licenseNumber: '',
+    yearsOfExperience: '',
+    specialties: []
   });
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState('');
@@ -28,18 +32,35 @@ const DoctorProfile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8083/api/doctors/${user.id}`, {
+        const response = await axios.get(`http://localhost:8083/api/doctors/${doctorId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setProfile(response.data);
+        
+        // Map the API response to our state structure
+        const doctorData = response.data;
+        setProfile({
+          fullName: doctorData.fullName || '',
+          email: doctorData.email || '',
+          phoneNumber: doctorData.phoneNumber || '',
+          bio: doctorData.bio || '',
+          licenseNumber: doctorData.licenseNumber || '',
+          yearsOfExperience: doctorData.yearsOfExperience || '',
+          specialties: doctorData.specialties || []
+        });
       } catch (error) {
         setError('Failed to fetch profile');
+        console.error('Error fetching doctor profile:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchProfile();
-  }, [token, user.id]);
+    if (token && doctorId) {
+      fetchProfile();
+    }
+  }, [token, doctorId]);
 
   const handleChange = (e) => {
     setProfile({
@@ -51,15 +72,24 @@ const DoctorProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8083/api/doctors/${user.id}`, profile, {
+      await axios.put(`http://localhost:8083/api/doctors/${doctorId}`, profile, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Profile updated successfully');
       setIsEditing(false);
     } catch (error) {
       setError('Failed to update profile');
+      console.error('Error updating profile:', error);
     }
   };
+
+  if (loading) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 4, mb: 4, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
@@ -74,9 +104,9 @@ const DoctorProfile = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Name"
-                name="name"
-                value={profile.name}
+                label="Full Name"
+                name="fullName"
+                value={profile.fullName}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
@@ -94,9 +124,9 @@ const DoctorProfile = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Specialization"
-                name="specialization"
-                value={profile.specialization}
+                label="Phone Number"
+                name="phoneNumber"
+                value={profile.phoneNumber}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
@@ -105,9 +135,9 @@ const DoctorProfile = () => {
               <TextField
                 fullWidth
                 label="Experience (years)"
-                name="experience"
+                name="yearsOfExperience"
                 type="number"
-                value={profile.experience}
+                value={profile.yearsOfExperience}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
@@ -115,19 +145,21 @@ const DoctorProfile = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Qualification"
-                name="qualification"
-                value={profile.qualification}
+                label="License Number"
+                name="licenseNumber"
+                value={profile.licenseNumber}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Contact Number"
-                name="contactNumber"
-                value={profile.contactNumber}
+                label="Bio"
+                name="bio"
+                multiline
+                rows={4}
+                value={profile.bio}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
@@ -166,4 +198,4 @@ const DoctorProfile = () => {
   );
 };
 
-export default DoctorProfile; 
+export default DoctorProfile;

@@ -37,10 +37,37 @@ const DoctorList = () => {
     fetchDoctors();
   }, [token]);
 
-  const filteredDoctors = doctors.filter(doctor =>
-    doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const filteredDoctors = doctors.filter(doctor => {
+  // Convert search term to lowercase once
+  const searchLower = searchTerm.toLowerCase();
+  
+  // Check if name exists and contains the search term
+  const nameMatch = doctor.name ? 
+    doctor.name.toLowerCase().includes(searchLower) : 
+    false;
+  
+  // Check for specialization - could be named differently or an array
+  let specializationMatch = false;
+  
+  // Check direct specialization field
+  if (doctor.specialization) {
+    specializationMatch = doctor.specialization.toLowerCase().includes(searchLower);
+  }
+  // Check for specialties array (commonly used format)
+  else if (doctor.specialties && Array.isArray(doctor.specialties)) {
+    specializationMatch = doctor.specialties.some(specialty => {
+      // Check if specialty is a string or an object
+      if (typeof specialty === 'string') {
+        return specialty.toLowerCase().includes(searchLower);
+      } else if (specialty && specialty.name) {
+        return specialty.name.toLowerCase().includes(searchLower);
+      }
+      return false;
+    });
+  }
+  
+  return nameMatch || specializationMatch;
+});
 
   const handleBookAppointment = (doctorId) => {
     navigate(`/patient/book-appointment/${doctorId}`);
@@ -67,7 +94,7 @@ const DoctorList = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Dr. {doctor.name}
+                  {doctor.fullName}
                 </Typography>
                 <Typography color="text.secondary" gutterBottom>
                   {doctor.qualification}
@@ -80,7 +107,7 @@ const DoctorList = () => {
                     sx={{ mr: 1 }}
                   />
                   <Chip
-                    label={`${doctor.experience} years experience`}
+                    label={`${doctor.yearsOfExperience} years experience`}
                     color="secondary"
                     size="small"
                   />

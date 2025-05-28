@@ -11,16 +11,18 @@ const DoctorDashboard = () => {
   });
   const [recentAppointments, setRecentAppointments] = useState([]);
 
-  const { token, user } = useSelector((state) => state.auth);
+  const { token} = useSelector((state) => state.auth);
+    const doctorId = localStorage.getItem('doctorId');
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [statsRes, appointmentsRes] = await Promise.all([
-          axios.get(`http://localhost:8084/api/appointments/doctor/${user.id}/stats`, {
+          axios.get(`http://localhost:8084/api/appointments/doctor/${doctorId}/stats`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get(`http://localhost:8084/api/appointments/doctor/${user.id}/recent`, {
+          axios.get(`http://localhost:8084/api/appointments/doctor/${doctorId}/recent`, {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
@@ -32,8 +34,10 @@ const DoctorDashboard = () => {
       }
     };
 
+    if(doctorId && token) {
     fetchData();
-  }, [token, user.id]);
+    }
+  },[token, doctorId]);
 
   const StatCard = ({ title, value, color }) => (
     <Paper
@@ -93,7 +97,7 @@ const DoctorDashboard = () => {
                   <ListItem>
                     <ListItemText
                       primary={`Patient: ${appointment.patientName}`}
-                      secondary={`Date: ${new Date(appointment.date).toLocaleDateString()} | Time: ${appointment.time} | Status: ${appointment.status}`}
+                      secondary={`Date: ${new Date(appointment.appointmentDateTime).toLocaleDateString()} | Time: ${new Date(appointment.appointmentDateTime).toLocaleTimeString()} | Status: ${appointment.status}`}
                     />
                   </ListItem>
                   {index < recentAppointments.length - 1 && <Divider />}

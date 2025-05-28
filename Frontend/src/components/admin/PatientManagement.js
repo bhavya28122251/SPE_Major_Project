@@ -156,11 +156,8 @@ const fetchPatients = useCallback(async () => {
       <Paper sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="h6" component="h2">
-            Patient Management
+            Patients
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleOpen}>
-            Add Patient
-          </Button>
         </Box>
 
         {error && (

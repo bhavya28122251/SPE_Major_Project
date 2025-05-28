@@ -65,7 +65,7 @@ function Layout() {
           { text: 'Dashboard', icon: <Dashboard />, path: '/patient' },
           { text: 'Book Appointment', icon: <EventNote />, path: '/patient/book-appointment' },
           { text: 'My Appointments', icon: <EventNote />, path: '/patient/appointments' },
-          { text: 'Find Doctors', icon: <MedicalServices />, path: '/patient/doctors' },
+          // { text: 'Find Doctors', icon: <MedicalServices />, path: '/patient/doctors' },
           { text: 'Profile', icon: <Person />, path: '/patient/profile' },
         ];
       default:

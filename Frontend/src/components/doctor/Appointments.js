@@ -28,26 +28,44 @@ function DoctorAppointments() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const { token, user } = useSelector((state) => state.auth);
+  const doctorId = localStorage.getItem('doctorId');
+
+
+    // Process appointments to add row numbers
+  const appointmentsWithRowNumbers = appointments.map((appointment, index) => ({
+    ...appointment,
+    rowNumber: index + 1
+  }));
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    {
+    field: 'rowNumber', 
+    headerName: '#', 
+    width: 90,
+    },
+    // { 
+    //   field: 'id', 
+    //   headerName: 'ID', 
+    //   width: 90, 
+    //   hide: true 
+    // },
     {
       field: 'patientName',
       headerName: 'Patient Name',
       width: 200,
-      valueGetter: (params) => params.row.patient?.name || 'N/A',
+      valueGetter: (params) => params.row.patientName || 'N/A',
     },
     {
       field: 'date',
       headerName: 'Date',
       width: 150,
-      valueGetter: (params) => new Date(params.row.date).toLocaleDateString(),
+      valueGetter: (params) => new Date(params.row.appointmentDateTime).toLocaleDateString(),
     },
     {
       field: 'time',
       headerName: 'Time',
       width: 150,
-      valueGetter: (params) => new Date(params.row.time).toLocaleTimeString(),
+      valueGetter: (params) => new Date(params.row.appointmentDateTime).toLocaleTimeString(),
     },
     {
       field: 'reason',
@@ -112,7 +130,7 @@ function DoctorAppointments() {
 
   const fetchAppointments = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:8084/api/appointments/doctor/${user.id}`, {
+      const response = await axios.get(`http://localhost:8084/api/appointments/doctor/${doctorId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAppointments(response.data);
@@ -198,7 +216,7 @@ function DoctorAppointments() {
 
         <div style={{ height: 400, width: '100%' }}>
           <DataGrid
-            rows={appointments}
+            rows={appointmentsWithRowNumbers}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}
@@ -211,19 +229,16 @@ function DoctorAppointments() {
           <DialogContent>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <Typography variant="subtitle1" gutterBottom>
-                Patient: {selectedAppointment?.patient?.name}
+                Patient: {selectedAppointment?.patientName || 'N/A'}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
-                Date: {new Date(selectedAppointment?.date).toLocaleDateString()}
+                Date: {new Date(selectedAppointment?.appointmentDateTime).toLocaleDateString()}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
-                Time: {new Date(selectedAppointment?.time).toLocaleTimeString()}
+                Time: {new Date(selectedAppointment?.appointmentDateTime).toLocaleTimeString()}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 Reason: {selectedAppointment?.reason}
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                Symptoms: {selectedAppointment?.symptoms}
               </Typography>
               <TextField
                 margin="normal"

@@ -192,11 +192,8 @@ function DoctorManagement() {
       <Paper sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="h6" component="h2">
-            Doctor Management
+            Doctors
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleOpen}>
-            Add Doctor
-          </Button>
         </Box>
 
         {error && (

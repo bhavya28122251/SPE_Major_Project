@@ -85,10 +85,36 @@ function Login() {
             navigate('/admin');
             break;
           case 'DOCTOR':
-            navigate('/doctor');
+            try {
+              const doctorResponse = await axios.get(
+                `http://localhost:8083/api/doctors/user/${userData.id}`,
+                { headers: { Authorization: `Bearer ${response.data.token}` } }
+              );
+              
+              // Store doctor ID in local storage
+              localStorage.setItem('doctorId', doctorResponse.data.id);
+              
+              navigate('/doctor');
+            } catch (error) {
+              console.error('Failed to fetch doctor details:', error);
+              navigate('/');
+            }
             break;
           case 'PATIENT':
-            navigate('/patient');
+                try {
+              const patientResponse = await axios.get(
+                `http://localhost:8082/api/patients/user/${userData.id}`,
+                { headers: { Authorization: `Bearer ${response.data.token}` } }
+              );
+              
+              // Store patient ID in local storage
+              localStorage.setItem('patientId', patientResponse.data.id);
+              
+              navigate('/patient');
+            } catch (error) {
+              console.error('Failed to fetch patient details:', error);
+              navigate('/');
+            }
             break;
           default:
             navigate('/');

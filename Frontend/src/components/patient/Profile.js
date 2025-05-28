@@ -7,13 +7,15 @@ import {
   Button,
   Grid,
   Box,
-  Alert
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const PatientProfile = () => {
   const { token, user } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({
     name: '',
     email: '',
@@ -28,13 +30,34 @@ const PatientProfile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8082/api/patients/${user.id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setProfile(response.data);
+        // First, try to get patientId from localStorage
+        let patientId = localStorage.getItem('patientId');
+        
+        // If patientId is not in localStorage, fetch it using userId
+        if (!patientId) {
+          const patientResponse = await axios.get(
+            `http://localhost:8082/api/patients/user/${user.id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          patientId = patientResponse.data.id;
+          // Save patientId to localStorage for future use
+          localStorage.setItem('patientId', patientId);
+        }
+        
+        // Now fetch complete patient profile using patientId
+        const profileResponse = await axios.get(
+          `http://localhost:8082/api/patients/${patientId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        
+        setProfile(profileResponse.data);
+        setLoading(false);
       } catch (error) {
-        setError('Failed to fetch profile');
+        console.error('Error fetching patient profile:', error);
+        setError('Failed to load patient profile');
+        setLoading(false);
       }
     };
 
@@ -51,7 +74,9 @@ const PatientProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8082/api/patients/${user.id}`, profile, {
+      let patientId = localStorage.getItem('patientId');
+
+      await axios.put(`http://localhost:8082/api/patients/${patientId}`, profile, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Profile updated successfully');
@@ -60,6 +85,13 @@ const PatientProfile = () => {
       setError('Failed to update profile');
     }
   };
+    if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
@@ -76,7 +108,7 @@ const PatientProfile = () => {
                 fullWidth
                 label="Name"
                 name="name"
-                value={profile.name}
+                value={profile.firstName}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
@@ -118,7 +150,7 @@ const PatientProfile = () => {
                 fullWidth
                 label="Contact Number"
                 name="contactNumber"
-                value={profile.contactNumber}
+                value={profile.phoneNumber}
                 onChange={handleChange}
                 disabled={!isEditing}
               />
