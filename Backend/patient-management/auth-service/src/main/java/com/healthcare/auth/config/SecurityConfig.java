@@ -15,11 +15,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import java.util.Arrays;
 import org.springframework.http.HttpMethod;
 
 @Configuration
+@EnableDiscoveryClient
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -37,8 +39,9 @@ public class SecurityConfig {
                 })
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.addAllowedOrigin("http://localhost:3000","https://frontend.local",
-                               "https://healthcare-appointments.com") // Add the origin of your front-end app
+                    config.addAllowedOrigin("http://localhost:3000");
+                    config.addAllowedOrigin("https://frontend.local");
+                    config.addAllowedOrigin("https://healthcare-appointments.com");
                     config.addAllowedMethod(HttpMethod.GET); // Allow GET method
                     config.addAllowedMethod(HttpMethod.POST); // Allow POST method
                     config.addAllowedMethod(HttpMethod.PUT); // Allow PUT method
