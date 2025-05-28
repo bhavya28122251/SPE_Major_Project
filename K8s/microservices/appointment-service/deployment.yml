@@ -21,6 +21,11 @@ spec:
           ports:
             - containerPort: 8084
           env:
+            - name: DOCTOR_SERVICE_URL
+              value: "http://doctor-service-svc.healthcare-app.svc.cluster.local:80"
+            - name: PATIENT_SERVICE_URL
+              value: "http://patient-service-svc.healthcare-app.svc.cluster.local:80"
+              
             - name: EUREKA_SERVER_ADDRESS
               valueFrom:
                 configMapKeyRef:
@@ -95,4 +100,3 @@ spec:
           #   initialDelaySeconds: 15
           #   periodSeconds: 5
           #   failureThreshold: 2
-            
